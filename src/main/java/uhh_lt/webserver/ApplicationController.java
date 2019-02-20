@@ -87,7 +87,13 @@ public class ApplicationController {
             }
         }
 
-        float mieterAnteil = mieterScore / (mieterScore + vermieterScore);
+        for(String key : vermieterTerms.keySet() ) {
+            if (text.contains(key)) {
+                vermieterScore += vermieterTerms.get(key);
+            }
+        }
+
+        float mieterAnteil = (float)mieterScore / (mieterScore + vermieterScore);
 
         if (mieterAnteil > 0.5) {
             return "Analyse: Mieter " + mieterAnteil;
