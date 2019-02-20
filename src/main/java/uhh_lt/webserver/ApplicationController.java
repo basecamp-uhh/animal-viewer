@@ -8,6 +8,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+
 @RestController
 @EnableAutoConfiguration
 public class ApplicationController {
@@ -63,5 +65,39 @@ public class ApplicationController {
         dt.connect();
         SpringApplication.run(ApplicationController.class, args);
     }
+
+    @RequestMapping("/classify")
+    String classify(@RequestParam(value = "text", defaultValue = "") String text, @RequestParam(value = "format", defaultValue = "text") String format) {
+
+        text = text.replace("\r", " ").replace("\n", " ").trim();
+        format = format.replace("\r", " ").replace("\n", " ").trim();
+
+        HashMap<String, Integer> vermieterTerms = new HashMap<>();
+        HashMap<String, Integer> mieterTerms = new HashMap<>();
+
+        vermieterTerms.put("bin Vermieter", 5);
+        mieterTerms.put("bin Mieter", 5);
+
+        int vermieterScore = 0;
+        int mieterScore = 0;
+
+        for(String key : mieterTerms.keySet() ) {
+            if (text.contains(key)) {
+                mieterScore += mieterTerms.get(key);
+            }
+        }
+
+        float mieterAnteil = mieterScore / (mieterScore + vermieterScore);
+
+        if (mieterAnteil > 0.5) {
+            return "Analyse: Mieter " + mieterAnteil;
+        } else {
+            return "Analyse: Vermieter " + (1-mieterAnteil);
+        }
+
+
+    }
+
+
 
 }
