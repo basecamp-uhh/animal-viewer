@@ -8,5 +8,6 @@ public class SolrConnectTester {
 
 
         JSONObject obj = new JSONObject("{\"T_date\": \"12039230921039213\"}");
+        connect.store(obj);
     }
 }
