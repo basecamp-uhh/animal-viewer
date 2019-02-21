@@ -96,14 +96,19 @@ public class ApplicationController {
 
         float mieterAnteil = (float)mieterScore / (mieterScore + vermieterScore);
 
-        if (mieterAnteil > 0.5)
+        if (mieterAnteil > 0.7)
         {
             return "Analyse: Mieter " + mieterAnteil;
         }
 
-        else
+        else if (1-mieterAnteil > 0.7)
         {
             return "Analyse: Vermieter " + (1-mieterAnteil);
+        }
+
+        else
+        {
+            return "Es konnte anhand der Frae nicht ermittelt werden, ob Sie ein Mieter oder ein Vermieter sind.";
         }
     }
 }
