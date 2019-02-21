@@ -67,7 +67,8 @@ public class ApplicationController {
     }
 
     @RequestMapping("/classify")
-    String classify(@RequestParam(value = "text", defaultValue = "") String text, @RequestParam(value = "format", defaultValue = "text") String format) {
+    String classify(@RequestParam(value = "text", defaultValue = "") String text, @RequestParam(value = "format", defaultValue = "text") String format)
+    {
 
         text = text.replace("\r", " ").replace("\n", " ").trim();
         format = format.replace("\r", " ").replace("\n", " ").trim();
@@ -95,15 +96,14 @@ public class ApplicationController {
 
         float mieterAnteil = (float)mieterScore / (mieterScore + vermieterScore);
 
-        if (mieterAnteil > 0.5) {
+        if (mieterAnteil > 0.5)
+        {
             return "Analyse: Mieter " + mieterAnteil;
-        } else {
-            return "Analyse: Vermieter " + (1-mieterAnteil);
         }
 
-
+        else
+        {
+            return "Analyse: Vermieter " + (1-mieterAnteil);
+        }
     }
-
-
-
 }
