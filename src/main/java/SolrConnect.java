@@ -10,21 +10,24 @@ import org.apache.solr.common.SolrDocumentList;
 
 import java.io.IOException;
 
-public class analyze_test
+public class SolrConnect
 {
     public static void main(String[] args) throws IOException, SolrServerException
     {
         SolrClient client = new HttpSolrClient.Builder("http://ltdemos:8983/solr/fea-schema-less-2").build();
 
-        for(int i=0;i<10;++i)
+        for(int i=0;i<100;++i)
         {
             SolrInputDocument doc = new SolrInputDocument();
             doc.addField("type", "question");
             doc.addField("id", "que-" + i);
+            doc.addField("date", "");
             client.add(doc);
         }
         client.commit();
     }
+
+
 
    /* public class SolrJSearcher
     {
