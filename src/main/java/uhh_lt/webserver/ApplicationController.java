@@ -17,8 +17,6 @@ public class ApplicationController {
     private static MieterClassifier mieterClassifier;
     private static SolrConnect solrConnect;
 
-
-
     /**
      * Runs the RESTful server.
      *
@@ -39,9 +37,9 @@ public class ApplicationController {
         text = text.replace("\r", " ").replace("\n", " ").trim();
         format = format.replace("\r", " ").replace("\n", " ").trim();
 
-        float mw = mieterClassifier.classify(text);
+        mieterClassifier.classify(text);
 
-        return mieterClassifier.getMieterwahrscheinlichkeitAsString(mw);
+        return mieterClassifier.getMieterwahrscheinlichkeitAsString();
     }
 
     @RequestMapping("/search")
@@ -50,8 +48,6 @@ public class ApplicationController {
 
         text = text.replace("\r", " ").replace("\n", " ").trim();
         format = format.replace("\r", " ").replace("\n", " ").trim();
-
-
 
         return solrConnect.search(text);
     }
