@@ -1,10 +1,8 @@
 package uhh_lt.webserver;
 
-import org.apache.tools.ant.taskdefs.Tstamp;
-import org.springframework.core.io.ClassPathResource;
+import org.apache.commons.lang.StringUtils;
 
 import java.io.*;
-import java.util.Dictionary;
 import java.util.HashMap;
 
 /**
@@ -83,15 +81,18 @@ public class MieterClassifier
     {
         text = text.toLowerCase();
 
+
         for(String key : mieterTerms.keySet() ) {
+            int count = StringUtils.countMatches(text, key);
             if (text.contains(key)) {
-                mieterScore += mieterTerms.get(key);
+                mieterScore += mieterTerms.get(key) * count;
             }
         }
 
         for(String key : vermieterTerms.keySet() ) {
+            int count = StringUtils.countMatches(text, key);
             if (text.contains(key)) {
-                vermieterScore += vermieterTerms.get(key);
+                vermieterScore += vermieterTerms.get(key) * count;
             }
         }
 
@@ -112,7 +113,7 @@ public class MieterClassifier
 
     /**
      * Gibt die Mieterwahrscheinlichkeit in einem kurzen Text eingebettet zurück.
-     * @param wahrscheinlichkeit Eine float Zahl
+     * @param wahrscheinlichkeit Eine float Zahl, die die Mietwahrscheinlichkeit ausdrückt
      * @return Einen String
      */
 

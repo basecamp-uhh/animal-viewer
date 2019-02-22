@@ -14,46 +14,10 @@ import java.util.HashMap;
 @EnableAutoConfiguration
 public class ApplicationController {
 
-
-    private static WebThesaurusDatastructure dt;
     private static MieterClassifier mieterClassifier;
+    private static SolrConnect solrConnect;
 
-    @RequestMapping("/expansions")
-    String home(@RequestParam(value = "word", defaultValue = "") String word, @RequestParam(value = "format", defaultValue = "text") String format) {
 
-        word = word.replace("\r", " ").replace("\n", " ").trim();
-        format = format.replace("\r", " ").replace("\n", " ").trim();
-
-        if (format.compareTo("json") == 0) {
-            return generateJSONResponse(word);
-        } else {
-            return generateTextResponse(word);
-        }
-    }
-
-    private String generateJSONResponse(String input) {
-        JSONObject out = new JSONObject();
-        out.put("input", input);
-
-        JSONArray expansions = new JSONArray();
-        for (Order2 exp : dt.getSimilarTerms(input)) {
-            expansions.add(exp.key);
-        }
-        out.put("expansions", expansions);
-
-        return out.toString();
-    }
-
-    private String generateTextResponse(String input) {
-        StringBuilder output = new StringBuilder();
-
-        output.append("input: " + input);
-        output.append("\nexpansions:");
-        for (Order2 exp : dt.getSimilarTerms(input)) {
-            output.append("\n  - " + exp.key);
-        }
-        return output.toString();
-    }
 
     /**
      * Runs the RESTful server.
@@ -61,10 +25,9 @@ public class ApplicationController {
      * @param args execution arguments
      */
     public static void main(String[] args) {
-        dt = new WebThesaurusDatastructure("resources/conf_web_deNews_trigram.xml");
-        dt.connect();
 
         mieterClassifier = new MieterClassifier();
+        solrConnect = new SolrConnect();
 
         SpringApplication.run(ApplicationController.class, args);
     }
@@ -79,5 +42,17 @@ public class ApplicationController {
         float mw = mieterClassifier.classify(text);
 
         return mieterClassifier.getMieterwahrscheinlichkeitAsString(mw);
+    }
+
+    @RequestMapping("/search")
+    String search(@RequestParam(value = "text", defaultValue = "") String text, @RequestParam(value = "format", defaultValue = "text") String format)
+    {
+
+        text = text.replace("\r", " ").replace("\n", " ").trim();
+        format = format.replace("\r", " ").replace("\n", " ").trim();
+
+
+
+        return solrConnect.search(text);
     }
 }
