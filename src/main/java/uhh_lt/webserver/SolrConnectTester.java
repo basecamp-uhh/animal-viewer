@@ -9,7 +9,7 @@ public class SolrConnectTester {
         SolrConnect connect = new SolrConnect();
 
 
-        JSONObject obj = new JSONObject("{\"T_date\": \"12039230921039213\"}");
+        JSONObject obj = new JSONObject("{\"T_Date\": \"12039230921039213\", \"Topic_id\": \"56343543541\", \"T_Subject\": \"werfdgthjkhgfrd\", \"T_Price\": \"654341\", \"T_Message\": \"gfhshkz\", \"T_Summary\": \"gfhfghjghjfhtg\", \"R_posted\": \"fgdhgfhgdfhfg\", \"R_Message\": \"jdfghkjfgd\"}");
         connect.store(obj);
     }
 }
