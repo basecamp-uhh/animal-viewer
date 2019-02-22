@@ -1,8 +1,12 @@
 package uhh_lt.webserver;
 import java.io.*;
-import org.json.*;
-import org.json.JSONObject;
-import org.json.JSONArray;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import uhh_lt.webserver.SolrConnect;
+
 //Data [
 //{
 //"Topic_id"
@@ -15,35 +19,38 @@ import org.json.JSONArray;
 //"R_Message"
 //}]
 /**
- * Import json
+ * Read Json file - show it
  ** **/
 public class JsonImport {
 
 
     public static void main(String[] args)
 
-    {
-        JSONObject obj = new JSONObject("resources/mietrechtexport1000-2.json");
+    {   JSONParser parser = new JSONParser();
+        SolrConnect connect = new SolrConnect();
 
-        JSONArray arr = obj.getJSONArray("data");
-
-        for (int i = 0; i < arr.length(); i++)
-        {
-            int topic_id = arr.getJSONObject(i).getInt("Topic_id");
-            String topic_date = arr.getJSONObject(i).getString("T_Date");
-
-            String topic_subject = arr.getJSONObject(i).getString("T_Subject");
-            int topic_price= arr.getJSONObject(i).getInt("T_Price");
-
-            String topic_message= arr.getJSONObject(i).getString("T_Message");
-            String topic_summary = arr.getJSONObject(i).getString("T_Summary");
-
-            String topic_summary = arr.getJSONObject(i).getString("R_posted");
-            String topic_summary = arr.getJSONObject(i).getString("R_Message");
-
-            String Tags = arr.getJSONObject(i).getString("Tags");
-            String empfehlung  = arr.getJSONObject(i).getString("Empfehlungen");
-
+        Object obj = null;
+        try {
+            obj = parser.parse(new FileReader("resources/mietrechtexport1000-2.json"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
+        JSONObject jsonObject = (JSONObject) obj;
+        JSONArray arr = (JSONArray) jsonObject.get("data");
+
+        for (int i = 0; i < arr.size(); i++)
+        {
+            JSONObject objekt  = (JSONObject) arr.get(i);
+
+            System.out.println(objekt.get("Topic_id"));
+            System.out.println(objekt.get("T_Date"));
+            System.out.println(objekt.get("T_Message"));
+
+           // connect.store(objekt);
+        }
+
+
     }
 }
