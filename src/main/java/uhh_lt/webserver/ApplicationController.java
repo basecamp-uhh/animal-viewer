@@ -76,41 +76,8 @@ public class ApplicationController {
         text = text.replace("\r", " ").replace("\n", " ").trim();
         format = format.replace("\r", " ").replace("\n", " ").trim();
 
-        //HashMap<String, Integer> vermieterTerms = new HashMap<>();
-        //HashMap<String, Integer> mieterTerms = new HashMap<>();
+        float mw = mieterClassifier.classify(text);
 
-        //vermieterTerms.put("bin Vermieter", 5);
-        //mieterTerms.put("bin Mieter", 5);
-
-
-        //uhh_lt.webserver.MieterClassifier.main();
-
-        /**int vermieterScore = 0;
-        int mieterScore = 0;
-
-        for(String key : mieterTerms.keySet() ) {
-            if (text.contains(key)) {
-                mieterScore += mieterTerms.get(key);
-            }
-        }
-
-        for(String key : vermieterTerms.keySet() ) {
-            if (text.contains(key)) {
-                vermieterScore += vermieterTerms.get(key);
-            }
-        }
-
-        float mieterAnteil = (float)mieterScore / (mieterScore + vermieterScore);
-
-        if (mieterAnteil > 0.5)
-        {
-            return "Analyse: Mieter " + mieterAnteil;
-        }
-
-        else
-        {
-            return "Analyse: Vermieter " + (1-mieterAnteil);
-        } */
-        return mieterClassifier.classify(text) +"";
+        return mieterClassifier.getMieterwahrscheinlichkeitAsString(mw);
     }
 }
