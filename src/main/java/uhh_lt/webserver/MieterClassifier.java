@@ -59,8 +59,49 @@ public class MieterClassifier
 
     public float classify(String text)
     {
-        return (float) 0.5;
+        int vermieterScore = 0;
+        int mieterScore = 0;
+
+        for(String key : mieterTerms.keySet() ) {
+            if (text.contains(key)) {
+                mieterScore += mieterTerms.get(key);
+            }
+        }
+
+        for(String key : vermieterTerms.keySet() ) {
+            if (text.contains(key)) {
+                vermieterScore += vermieterTerms.get(key);
+            }
+        }
+
+        float mieterWahrscheinlichkeit = (float)mieterScore / (mieterScore + vermieterScore);
+
+        return mieterWahrscheinlichkeit;
     }
 
+    public float getVermieterwahrscheinlichkeit(float mieterwahrscheinlichkeit)
+    {
+        return 1-mieterwahrscheinlichkeit;
+    }
+
+    public String getMieterwahrscheinlichkeitAsString(float wahrscheinlichkeit)
+    {
+        String mieterwahrscheinlichkeitString = "";
+
+        if (wahrscheinlichkeit > 0.5)
+        {
+            return "Analyse: Mieter mit einer Wahrscheinlichkeit von " + wahrscheinlichkeit;
+        }
+
+        else if (wahrscheinlichkeit < 0.5)
+        {
+            return "Analyse: Vermieter mit einer Wahrscheinlichkeit von " + (1-wahrscheinlichkeit);
+        }
+
+        else
+        {
+            return "Es konnte anhand der Frage nicht ermittelt werden, ob Sie ein Mieter oder ein Vermieter sind.";
+        }
+    }
 
 }
