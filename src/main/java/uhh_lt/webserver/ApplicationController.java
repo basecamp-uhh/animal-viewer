@@ -16,7 +16,7 @@ public class ApplicationController {
 
 
     private static WebThesaurusDatastructure dt;
-
+    private static MieterClassifier mieterClassifier;
 
     @RequestMapping("/expansions")
     String home(@RequestParam(value = "word", defaultValue = "") String word, @RequestParam(value = "format", defaultValue = "text") String format) {
@@ -63,6 +63,9 @@ public class ApplicationController {
     public static void main(String[] args) {
         dt = new WebThesaurusDatastructure("resources/conf_web_deNews_trigram.xml");
         dt.connect();
+
+        mieterClassifier = new MieterClassifier();
+
         SpringApplication.run(ApplicationController.class, args);
     }
 
@@ -73,13 +76,16 @@ public class ApplicationController {
         text = text.replace("\r", " ").replace("\n", " ").trim();
         format = format.replace("\r", " ").replace("\n", " ").trim();
 
-        HashMap<String, Integer> vermieterTerms = new HashMap<>();
-        HashMap<String, Integer> mieterTerms = new HashMap<>();
+        //HashMap<String, Integer> vermieterTerms = new HashMap<>();
+        //HashMap<String, Integer> mieterTerms = new HashMap<>();
 
-        vermieterTerms.put("bin Vermieter", 5);
-        mieterTerms.put("bin Mieter", 5);
+        //vermieterTerms.put("bin Vermieter", 5);
+        //mieterTerms.put("bin Mieter", 5);
 
-        int vermieterScore = 0;
+
+        //uhh_lt.webserver.MieterClassifier.main();
+
+        /**int vermieterScore = 0;
         int mieterScore = 0;
 
         for(String key : mieterTerms.keySet() ) {
@@ -96,19 +102,15 @@ public class ApplicationController {
 
         float mieterAnteil = (float)mieterScore / (mieterScore + vermieterScore);
 
-        if (mieterAnteil > 0.7)
+        if (mieterAnteil > 0.5)
         {
             return "Analyse: Mieter " + mieterAnteil;
         }
 
-        else if (1-mieterAnteil > 0.7)
-        {
-            return "Analyse: Vermieter " + (1-mieterAnteil);
-        }
-
         else
         {
-            return "Es konnte anhand der Frae nicht ermittelt werden, ob Sie ein Mieter oder ein Vermieter sind.";
-        }
+            return "Analyse: Vermieter " + (1-mieterAnteil);
+        } */
+        return mieterClassifier.classify(text) +"";
     }
 }
