@@ -42,25 +42,29 @@ public class SolrConnect {
 
     }
 
-
-   /* public class SolrJSearcher
-    {
-        public static void main(String[] args) throws IOException, SolrServerException
+        public String search(String searchTerm)
         {
-            SolrClient client = new HttpSolrClient.Builder("http://ltdemos:8983/solr/#/~cores/fea-test").build();
 
             SolrQuery query = new SolrQuery();
 
-            /*query.setQuery("sony digital camera");
-            query.addFilterQuery("cat:electronics","store:amazon.com");
-            query.setFields("id","price","merchant","cat","store");
+            query.setQuery(searchTerm);
+            // query.addFilterQuery("cat:electronics","store:amazon.com");
+            query.setFields("id","Q_date","Q_subject","price","Q_message", "T_summary", "A_date", "A_message");
             query.setStart(0);
-            query.set("defType", "edismax");
+            // query.set("defType", "edismax");
 
-            QueryResponse response = client.query(query);
+            QueryResponse response = null;
+            try {
+                response = client.query(query);
+            } catch (SolrServerException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             SolrDocumentList results = response.getResults();
             for (int i = 0; i < results.size(); ++i) {
                 System.out.println(results.get(i));
             }
-        }*/
-}
+            return "";
+        }
+    }
