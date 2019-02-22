@@ -16,8 +16,8 @@ public class MieterClassifier
 
     public MieterClassifier()
     {
-        DateiEinleser("Mieter", mieterTerms);
-        DateiEinleser("Vermieter", vermieterTerms);
+        DateiEinleser("resources/Mieter", mieterTerms);
+        DateiEinleser("resources/Vermieter", vermieterTerms);
     }
 
     private void DateiEinleser(String Filename, HashMap<String, Integer> Dictionary) {
@@ -38,7 +38,7 @@ public class MieterClassifier
                     //for (String item : data)
                     //{
                     if (!data.isEmpty()) {
-                        Dictionary.put(data, 1);
+                        Dictionary.put(data.toLowerCase(), 1);
                     }
 
                     //}
@@ -59,6 +59,7 @@ public class MieterClassifier
 
     public float classify(String text)
     {
+        text = text.toLowerCase();
         int vermieterScore = 0;
         int mieterScore = 0;
 
