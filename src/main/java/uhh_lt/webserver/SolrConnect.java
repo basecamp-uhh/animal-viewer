@@ -19,9 +19,8 @@ public class SolrConnect {
 
     static SolrClient client;
 
-    public SolrConnect() {
-         client = new HttpSolrClient.Builder("http://ltdemos:8983/solr/fea-schema-less-2").build();
-
+    public SolrConnect() { // für ssh use : localhost , sonst ltdemos
+         client = new HttpSolrClient.Builder("http://localhost:8983/solr/fea-schema-less-2").build();
     }
 
 
@@ -64,7 +63,7 @@ public class SolrConnect {
         }
     }
 
-    public String search(String searchTerm) throws IOException {
+    public String search(String searchTerm)  {
 
             SolrQuery query = new SolrQuery();
 
@@ -83,16 +82,40 @@ public class SolrConnect {
                 e.printStackTrace();
             }
 
-        FileWriter fw = new FileWriter("resources/out.txt");
+        SolrDocumentList results = response.getResults();
+        for (int i = 0; i < results.size(); ++i) {
+            System.out.println(results.get(i));
+        }
+        return "";
+    }
+
+    public String IdSearch() throws IOException {
+
+        SolrQuery query = new SolrQuery();
+
+        query.setFields("id");
+        query.setStart(0);
+
+        QueryResponse response = null;
+        try {
+            response = client.query(query);
+        } catch (SolrServerException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        FileWriter fw = new FileWriter("resources/outputID.txt");
 
         SolrDocumentList results = response.getResults();
         for (int i = 0; i < results.size(); ++i) {
             System.out.println(results.get(i));
             fw.write(String.valueOf(results.get(i).get("id")));
             fw.write("\n");
-            }
+        }
 
         fw.close();
         return  "";
     }
+
 }
