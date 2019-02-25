@@ -107,7 +107,7 @@
         <dependency>
             <groupId>com.ibm.watson.developer_cloud</groupId>
             <artifactId>java-sdk</artifactId>
-            <version>3.5.3</version>
+            <version>5.4.0</version>
         </dependency>
 
         <dependency>
