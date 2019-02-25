@@ -16,6 +16,7 @@ public class MieterClassifier
     private HashMap<String, Integer> mieterTerms = new HashMap<>();
     private int vermieterScore;
     private int mieterScore;
+    private float mieterWahrscheinlichkeit;
 
 
     MieterClassifier()
@@ -80,7 +81,9 @@ public class MieterClassifier
     float classify(String text)
     {
         text = text.toLowerCase();
-
+        vermieterScore = 0;
+        mieterScore = 0;
+        mieterWahrscheinlichkeit = 0;
 
         for(String key : mieterTerms.keySet() ) {
             int count = StringUtils.countMatches(text, key);
@@ -96,39 +99,38 @@ public class MieterClassifier
             }
         }
 
-        return (float)mieterScore / (mieterScore + vermieterScore);
+        mieterWahrscheinlichkeit = (float)mieterScore / (mieterScore + vermieterScore);
+        return mieterWahrscheinlichkeit;
     }
 
     /**
      * Gibt eine Zahl zurück, die die Wahrscheinlichkeit dafür, dass es sich um einen Vermieter handelt
      * ausgibt
-     * @param mieterwahrscheinlichkeit Eine float Zahl
      * @return float Die Vermieterwahrscheinlichkeit
      */
 
-    public float getVermieterwahrscheinlichkeit(float mieterwahrscheinlichkeit)
+    public float getVermieterwahrscheinlichkeit()
     {
-        return 1-mieterwahrscheinlichkeit;
+        return 1-mieterWahrscheinlichkeit;
     }
 
     /**
      * Gibt die Mieterwahrscheinlichkeit in einem kurzen Text eingebettet zurück.
-     * @param wahrscheinlichkeit Eine float Zahl, die die Mietwahrscheinlichkeit ausdrückt
      * @return Einen String
      */
 
-    String getMieterwahrscheinlichkeitAsString(float wahrscheinlichkeit)
+    String getMieterwahrscheinlichkeitAsString()
     {
         String mieterwahrscheinlichkeitString = "";
 
-        if (wahrscheinlichkeit > 0.5)
+        if (mieterWahrscheinlichkeit > 0.5)
         {
-            return "Analyse: Mieter mit einer Wahrscheinlichkeit von " + wahrscheinlichkeit;
+            return "Analyse: Mieter mit einer Wahrscheinlichkeit von " + mieterWahrscheinlichkeit;
         }
 
-        else if (wahrscheinlichkeit < 0.5)
+        else if (mieterWahrscheinlichkeit < 0.5)
         {
-            return "Analyse: Vermieter mit einer Wahrscheinlichkeit von " + (1-wahrscheinlichkeit);
+            return "Analyse: Vermieter mit einer Wahrscheinlichkeit von " + (1-mieterWahrscheinlichkeit);
         }
 
         else
