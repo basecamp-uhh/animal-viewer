@@ -102,6 +102,9 @@ public class MieterClassifier
             }
         }
 
+        if (mieterScore + vermieterScore == 0) {
+            return 0.5f;
+        }
         mieterWahrscheinlichkeit = (float)mieterScore / (mieterScore + vermieterScore);
         return mieterWahrscheinlichkeit;
     }

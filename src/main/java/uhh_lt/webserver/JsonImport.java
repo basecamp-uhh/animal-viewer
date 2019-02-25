@@ -43,13 +43,11 @@ public class JsonImport {
         for (int i = 0; i < arr.size(); i++) //liest die ganze array von objekt & speichern die in Solr
         {
             JSONObject objekt  = (JSONObject) arr.get(i);
-            connect.store(objekt, false);
+            connect.store(net.sf.json.JSONObject.fromObject(objekt), false);
             if (i % 100 == 0) {
                 connect.commit();
             }
         }
         connect.commit();
-
-
     }
 }

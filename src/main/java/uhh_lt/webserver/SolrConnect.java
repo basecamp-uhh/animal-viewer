@@ -1,26 +1,23 @@
 package uhh_lt.webserver;
 
+import net.sf.json.JSONObject;
 import org.apache.solr.client.solrj.SolrClient;
+import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
-import org.apache.solr.common.SolrInputDocument;
-import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocumentList;
-import org.json.simple.JSONObject;
+import org.apache.solr.common.SolrInputDocument;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class SolrConnect {
 
     static SolrClient client;
 
     public SolrConnect() { // für ssh use : localhost , sonst ltdemos
-         client = new HttpSolrClient.Builder("http://localhost:8983/solr/fea-schema-less-2").build();
+         client = new HttpSolrClient.Builder("http://ltdemos:8983/solr/fea-schema-less-2").build();
     }
 
 

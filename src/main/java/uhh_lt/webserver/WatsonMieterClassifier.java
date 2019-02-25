@@ -11,7 +11,7 @@ public class WatsonMieterClassifier {
 
 public WatsonMieterClassifier() {
     IamOptions options = new IamOptions.Builder()
-            .apiKey("")
+            .apiKey("nqeYBC1Rp7M7CpUpAwmr-cFBiQVHndCzNMz07-Yw3lKF")
             .build();
 
     naturalLanguageClassifier = new NaturalLanguageClassifier(options);
