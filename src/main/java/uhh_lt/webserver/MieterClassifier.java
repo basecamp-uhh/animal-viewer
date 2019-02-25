@@ -87,6 +87,7 @@ public class MieterClassifier
 
         for(String key : mieterTerms.keySet() ) {
             int count = StringUtils.countMatches(text, key);
+            //System.out.println("mieter_key " +key  +"\t" + text.contains(key));
             if (text.contains(key)) {
                 mieterScore += mieterTerms.get(key) * count;
             }
@@ -94,6 +95,7 @@ public class MieterClassifier
 
         for(String key : vermieterTerms.keySet() ) {
             int count = StringUtils.countMatches(text, key);
+            //System.out.println("vermieter_key " +key  +"\t" + text.contains(key));
             if (text.contains(key)) {
                 vermieterScore += vermieterTerms.get(key) * count;
             }
