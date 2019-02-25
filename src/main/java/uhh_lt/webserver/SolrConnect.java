@@ -63,30 +63,30 @@ public class SolrConnect {
         }
     }
 
-    public String search(String searchTerm)  {
+    public String search(String searchTerm) {
 
-            SolrQuery query = new SolrQuery();
+        SolrQuery query = new SolrQuery();
 
-            query.setQuery(searchTerm);
-            // query.addFilterQuery("cat:electronics","store:amazon.com");
-            query.setFields("id");
-            query.setStart(0);
-            // query.set("defType", "edismax");
+        query.setQuery(searchTerm);
+        // query.addFilterQuery("cat:electronics","store:amazon.com");
+        query.setFields("id");
+        query.setStart(0);
+        // query.set("defType", "edismax");
 
-            QueryResponse response = null;
-            try {
-                response = client.query(query);
-            } catch (SolrServerException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
+        QueryResponse response = null;
+        try {
+            response = client.query(query);
+        } catch (SolrServerException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        StringBuilder out = new StringBuilder();
         SolrDocumentList results = response.getResults();
         for (int i = 0; i < results.size(); ++i) {
-            System.out.println(results.get(i));
+            out.append(results.get(i)).append("\n");
         }
-        return "";
+        return out.toString();
     }
 
     public String IdSearch() throws IOException {
@@ -119,3 +119,4 @@ public class SolrConnect {
     }
 
 }
+

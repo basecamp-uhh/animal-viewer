@@ -1,21 +1,20 @@
 package uhh_lt.webserver;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-import org.jobimtext.api.struct.Order2;
-import org.jobimtext.api.struct.WebThesaurusDatastructure;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 
 @RestController
 @EnableAutoConfiguration
-public class ApplicationController {
+@SpringBootApplication
+public class ApplicationController  extends SpringBootServletInitializer {
 
-    private static MieterClassifier mieterClassifier;
-    private static SolrConnect solrConnect;
+    private static MieterClassifier mieterClassifier = new MieterClassifier();
+    private static SolrConnect solrConnect = new SolrConnect();
 
     /**
      * Runs the RESTful server.
@@ -23,9 +22,6 @@ public class ApplicationController {
      * @param args execution arguments
      */
     public static void main(String[] args) {
-
-        mieterClassifier = new MieterClassifier();
-        solrConnect = new SolrConnect();
 
         SpringApplication.run(ApplicationController.class, args);
     }
@@ -50,5 +46,12 @@ public class ApplicationController {
         format = format.replace("\r", " ").replace("\n", " ").trim();
 
         return solrConnect.search(text);
+    }
+
+    @RequestMapping("/")
+    String home(@RequestParam(value = "text", defaultValue = "") String text, @RequestParam(value = "format", defaultValue = "text") String format)
+    {
+
+        return "hello world";
     }
 }
