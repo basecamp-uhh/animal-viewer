@@ -19,7 +19,7 @@ import uhh_lt.webserver.SolrConnect;
 //"R_Message"
 //}]
 /**
- * Read Json file - show it
+ * Die Json File in the System einzulesen
  ** **/
 public class JsonImport {
 
@@ -40,16 +40,15 @@ public class JsonImport {
         JSONObject jsonObject = (JSONObject) obj;
         JSONArray arr = (JSONArray) jsonObject.get("data");
 
-        for (int i = 0; i < arr.size(); i++)
+        for (int i = 0; i < arr.size(); i++) //liest die ganze array von objekt & speichern die in Solr
         {
             JSONObject objekt  = (JSONObject) arr.get(i);
-
-            System.out.println(objekt.get("Topic_id"));
-            System.out.println(objekt.get("T_Date"));
-            System.out.println(objekt.get("T_Message"));
-
-           // connect.store(objekt);
+            connect.store(objekt, false);
+            if (i % 100 == 0) {
+                connect.commit();
+            }
         }
+        connect.commit();
 
 
     }
