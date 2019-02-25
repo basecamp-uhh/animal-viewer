@@ -9,6 +9,7 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocumentList;
 import org.json.simple.JSONObject;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -18,9 +19,8 @@ public class SolrConnect {
 
     static SolrClient client;
 
-    public SolrConnect() {
+    public SolrConnect() { // für ssh use : localhost , sonst ltdemos
          client = new HttpSolrClient.Builder("http://localhost:8983/solr/fea-schema-less-2").build();
-
     }
 
 
@@ -63,7 +63,7 @@ public class SolrConnect {
         }
     }
 
-    public String search(String searchTerm) {
+    public String search(String searchTerm)  {
 
             SolrQuery query = new SolrQuery();
 
@@ -81,9 +81,41 @@ public class SolrConnect {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            SolrDocumentList results = response.getResults();
-            for (int i = 0; i < results.size(); ++i) {
-                System.out.println(results.get(i));
-            }
-            return ""; }
+
+        SolrDocumentList results = response.getResults();
+        for (int i = 0; i < results.size(); ++i) {
+            System.out.println(results.get(i));
+        }
+        return "";
     }
+
+    public String IdSearch() throws IOException {
+
+        SolrQuery query = new SolrQuery();
+
+        query.setFields("id");
+        query.setStart(0);
+
+        QueryResponse response = null;
+        try {
+            response = client.query(query);
+        } catch (SolrServerException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        FileWriter fw = new FileWriter("resources/outputID.txt");
+
+        SolrDocumentList results = response.getResults();
+        for (int i = 0; i < results.size(); ++i) {
+            System.out.println(results.get(i));
+            fw.write(String.valueOf(results.get(i).get("id")));
+            fw.write("\n");
+        }
+
+        fw.close();
+        return  "";
+    }
+
+}
