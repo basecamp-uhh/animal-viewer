@@ -1,6 +1,6 @@
 package uhh_lt.webserver;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
 import java.util.HashMap;
@@ -21,8 +21,8 @@ public class MieterClassifier
 
     MieterClassifier()
     {
-        DateiEinleser("resources/Mieter", mieterTerms);
-        DateiEinleser("resources/Vermieter", vermieterTerms);
+        DateiEinleser("Mieter", mieterTerms);
+        DateiEinleser("Vermieter", vermieterTerms);
         vermieterScore = 0;
         mieterScore = 0;
     }
@@ -35,14 +35,15 @@ public class MieterClassifier
      */
 
     private void DateiEinleser(String Filename, HashMap<String, Integer> Dictionary) {
-        //try (InputStream input = getClass().getClassLoader().getResourceAsStream("resources/" + "Mieter"))
         System.out.println("loading: " +Filename);
+
+        InputStream input = getClass().getClassLoader().getResourceAsStream(Filename);
 
 
         BufferedReader TSVFile = null;
         try {
             TSVFile = new BufferedReader(
-                    new InputStreamReader(new FileInputStream(Filename)));
+                    new InputStreamReader(input));
             String dataRow = null; // Read first line
 
                 dataRow = TSVFile.readLine();
