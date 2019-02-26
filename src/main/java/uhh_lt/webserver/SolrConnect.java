@@ -16,8 +16,8 @@ public class SolrConnect {
 
     static SolrClient client;
 
-    public SolrConnect() { // für ssh use : localhost , sonst ltdemos
-         client = new HttpSolrClient.Builder("http://ltdemos:8983/solr/fea-schema-less-2").build();
+    public SolrConnect() { // für ssh  : localhost , sonst ltdemos
+         client = new HttpSolrClient.Builder("http://localhost:8983/solr/fea-schema-less-2").build();
     }
 
 
@@ -86,14 +86,16 @@ public class SolrConnect {
         return out.toString();
     }
 
-    public String IdSearch() throws IOException {
+    public void IdSearch() throws IOException {
 
+        // query.addFilterQuery("cat:electronics","store:amazon.com");
+        // query.set("defType", "edismax");
         SolrQuery query = new SolrQuery();
-
-        query.setFields("id");
-        query.setStart(0);
+        // alle 1000 Daten werden berucksichtight
+        query.setQuery("*:*").setFields("id").setStart(0).setRows(10000);
 
         QueryResponse response = null;
+
         try {
             response = client.query(query);
         } catch (SolrServerException e) {
@@ -102,17 +104,16 @@ public class SolrConnect {
             e.printStackTrace();
         }
 
+        SolrDocumentList results = response.getResults();
         FileWriter fw = new FileWriter("resources/outputID.txt");
 
-        SolrDocumentList results = response.getResults();
         for (int i = 0; i < results.size(); ++i) {
             System.out.println(results.get(i));
             fw.write(String.valueOf(results.get(i).get("id")));
             fw.write("\n");
         }
-
         fw.close();
-        return  "";
+
     }
 
 }
