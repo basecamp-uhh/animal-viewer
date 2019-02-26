@@ -121,6 +121,17 @@ public class MieterClassifier
     }
 
     /**
+     * Gibt eine Zahl zurück, die die Wahrscheinlichkeit dafür, dass es sich um einen Mieter handelt
+     * ausgibt
+     * @return float die Mieterwahrscheinlichkeit
+     */
+
+    public float getMieterwahrscheinlichkeit()
+    {
+        return mieterWahrscheinlichkeit;
+    }
+
+    /**
      * Gibt die Mieterwahrscheinlichkeit in einem kurzen Text eingebettet zurück.
      * @return Einen String
      */
@@ -165,4 +176,23 @@ public class MieterClassifier
         return mieterScore;
     }
 
+
+    /**
+     * Wenn es sich um einen Mieter handelt wird 1 ausgegeben.
+     * @param text Ein String
+     * @return true wenn Mieter, false wenn Vermieter
+     */
+    public boolean istMieter(String text)
+    {
+        float p = classify(text);
+
+        if(p > 0.5)
+        {
+            return true;
+        }
+         else
+        {
+            return false;
+        }
+    }
 }
