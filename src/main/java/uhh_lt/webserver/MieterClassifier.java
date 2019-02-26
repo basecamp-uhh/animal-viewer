@@ -81,6 +81,8 @@ public class MieterClassifier
 
     float classify(String text)
     {
+        System.out.println(text);
+
         text = text.toLowerCase();
         vermieterScore = 0;
         mieterScore = 0;

@@ -1,6 +1,5 @@
 package uhh_lt.webserver;
 
-import net.sf.json.JSONObject;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -8,6 +7,7 @@ import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
+import org.json.simple.JSONObject;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -28,6 +28,8 @@ public class SolrConnect {
 
 
     public void store(JSONObject object, boolean commit) {
+        MieterClassifier mc = new MieterClassifier();
+        WatsonMieterClassifier wmc = new WatsonMieterClassifier();
         SolrInputDocument inputDocument = new SolrInputDocument();
         inputDocument.addField("id", object.get("Topic_id"));
         String tDate = (String) object.get("T_Date");
@@ -39,6 +41,11 @@ public class SolrConnect {
         inputDocument.addField("a_date", object.get("R_posted"));
         inputDocument.addField("a_message", object.get("R_Message"));
         inputDocument.addField("t_time", DatenDifferenz.Differenz((String)object.get("T_Date"),(String)object.get("R_posted")));
+        inputDocument.addField("Expertensystem_istmieter", mc.istMieter((String)object.get("T_Message")));
+        inputDocument.addField("Expertensystem_wert", mc.getMieterwahrscheinlichkeit());
+        inputDocument.addField("Watson", wmc.classify((String)object.get("T_Message")));
+        inputDocument.addField( "Watson istmieter", wmc.istMieter());
+
         try {
             client.add(inputDocument);
             if (commit) {

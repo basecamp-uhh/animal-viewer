@@ -31,7 +31,7 @@ public class JsonImport {
 
         Object obj = null;
         try {
-            obj = parser.parse(new FileReader("resources/mietrechtexport1000-2.json"));
+            obj = parser.parse(new FileReader("resources/mietrechtexport1000-2-sample.json"));
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParseException e) {
@@ -43,7 +43,7 @@ public class JsonImport {
         for (int i = 0; i < arr.size(); i++) //liest die ganze array von objekt & speichern die in Solr
         {
             JSONObject objekt  = (JSONObject) arr.get(i);
-            connect.store(net.sf.json.JSONObject.fromObject(objekt), false);
+            connect.store(objekt, false);
             if (i % 100 == 0) {
                 connect.commit();
             }
