@@ -38,7 +38,7 @@ public class DatenDifferenz {
          millis + " milliseonds");*/
     }
 
-    public static void Differenz(String aDate, String tDate)
+    public static long Differenz(String aDate, String tDate)
     {
         try {
             //String sDate1 = "31/12/1998";
@@ -51,6 +51,7 @@ public class DatenDifferenz {
 
             //System.out.println(sDate1 + "\t" + date1);
             System.out.println(diff);
+            return diff;
         }
 
         catch (ParseException e)
@@ -59,5 +60,5 @@ public class DatenDifferenz {
         }
 
 
-    }
+        return 0; }
 }

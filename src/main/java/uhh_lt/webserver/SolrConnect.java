@@ -17,7 +17,7 @@ public class SolrConnect {
     static SolrClient client;
 
     public SolrConnect() { // für ssh  : localhost , sonst ltdemos
-         client = new HttpSolrClient.Builder("http://localhost:8983/solr/fea-schema-less-2").build();
+         client = new HttpSolrClient.Builder("http://ltdemos:8983/solr/fea-schema-less-2").build();
     }
 
 
@@ -25,6 +25,7 @@ public class SolrConnect {
        store(object, true);
 
     }
+
 
     public void store(JSONObject object, boolean commit) {
         SolrInputDocument inputDocument = new SolrInputDocument();
@@ -37,6 +38,7 @@ public class SolrConnect {
         inputDocument.addField("t_summary", object.get("T_Summary"));
         inputDocument.addField("a_date", object.get("R_posted"));
         inputDocument.addField("a_message", object.get("R_Message"));
+        inputDocument.addField("t_time", DatenDifferenz.Differenz((String)object.get("T_Date"),(String)object.get("R_posted")));
         try {
             client.add(inputDocument);
             if (commit) {
