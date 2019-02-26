@@ -16,7 +16,7 @@ public class DatenDifferenz {
         GregorianCalendar qdate = new GregorianCalendar();
         printDifference(adate, qdate);
 
-        Differenz();
+        Differenz("2019-02-20 16:29:03", "2019-02-20 17:23:31");
     }
 
     private static void printDifference(GregorianCalendar adate, GregorianCalendar qdate)
@@ -38,18 +38,18 @@ public class DatenDifferenz {
          millis + " milliseonds");*/
     }
 
-    public static void Differenz()
+    public static void Differenz(String aDate, String tDate)
     {
         try {
-            String sDate1 = "31/12/1998";
-            String sDate2 = "31/12/1999";
-            Date date1 = new SimpleDateFormat("dd/MM/yyyy").parse(sDate1);
-            Date date2 = new SimpleDateFormat("dd/MM/yyyy").parse(sDate2);
+            //String sDate1 = "31/12/1998";
+            //String sDate2 = "31/12/1999";
+            Date date1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(aDate);  //2019-02-20 16:29:03
+            Date date2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(tDate);
 
             long diffInMillies = Math.abs(date2.getTime() - date1.getTime());
-            long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+            long diff = TimeUnit.MINUTES.convert(diffInMillies, TimeUnit.MILLISECONDS);
 
-            System.out.println(sDate1 + "\t" + date1);
+            //System.out.println(sDate1 + "\t" + date1);
             System.out.println(diff);
         }
 
