@@ -115,6 +115,37 @@ public class SolrConnect {
         fw.close();
 
     }
+    public void SetDate() throws IOException {
+
+        // query.addFilterQuery("cat:electronics","store:amazon.com");
+        // query.set("defType", "edismax");
+        SolrQuery query = new SolrQuery();
+        // alle 1000 Daten werden berucksichtight
+        query.setQuery("*:*").setFields("id","t_date","a_date").setStart(0).setRows(10000);
+
+        QueryResponse response = null;
+
+        try {
+            response = client.query(query);
+        } catch (SolrServerException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        SolrDocumentList results = response.getResults();
+        FileWriter fw = new FileWriter("resources/dateId.txt");
+
+        for (int i = 0; i < results.size(); ++i) {
+            System.out.println(results.get(i));
+            fw.write(String.valueOf(results.get(i).get("id")));
+            fw.write(String.valueOf(results.get(i).get("t_date")));
+            fw.write(String.valueOf(results.get(i).get("a_date")));
+            fw.write("\n");
+        }
+        fw.close();
+
+    }
 
 }
 
