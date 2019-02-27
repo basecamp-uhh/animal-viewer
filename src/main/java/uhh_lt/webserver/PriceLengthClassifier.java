@@ -25,7 +25,7 @@ public class PriceLengthClassifier {
             sum += ((ArrayList<Long>)result.get("t_length")).get(0);
         }
         float average0 = (float)sum/results.size();
-        fw.write("Die durchschnittliche Wortlänge bei Preisen zwischen 20 und 29 Euro ist " + average0 + " Wörter.");
+        fw.write("Die durchschnittliche Fragelänge bei Preisen zwischen 20 und 29 Euro ist " + average0 + " Wörter.");
         fw.write("\n");
 
         sum = 0;
@@ -34,7 +34,7 @@ public class PriceLengthClassifier {
             sum += ((ArrayList<Long>)result.get("t_length")).get(0);
         }
         average0 = (float)sum/results.size();
-        fw.write("Die durchschnittliche Wortlänge bei Preisen zwischen 30 und 39 Euro ist " + average0 + " Wörter.");
+        fw.write("Die durchschnittliche Fragelänge bei Preisen zwischen 30 und 39 Euro ist " + average0 + " Wörter.");
         fw.write("\n");
 
         sum = 0;
@@ -43,7 +43,7 @@ public class PriceLengthClassifier {
             sum += ((ArrayList<Long>)result.get("t_length")).get(0);
         }
         average0 = (float)sum/results.size();
-        fw.write("Die durchschnittliche Wortlänge bei Preisen zwischen 40 und 49 Euro ist " + average0 + " Wörter.");
+        fw.write("Die durchschnittliche Fragelänge bei Preisen zwischen 40 und 49 Euro ist " + average0 + " Wörter.");
         fw.write("\n");
 
         sum = 0;
@@ -52,7 +52,7 @@ public class PriceLengthClassifier {
             sum += ((ArrayList<Long>)result.get("t_length")).get(0);
         }
         average0 = (float)sum/results.size();
-        fw.write("Die durchschnittliche Wortlänge bei Preisen zwischen 50 und 59 Euro ist " + average0 + " Wörter.");
+        fw.write("Die durchschnittliche Fragelänge bei Preisen zwischen 50 und 59 Euro ist " + average0 + " Wörter.");
         fw.write("\n");
 
         sum = 0;
@@ -61,7 +61,7 @@ public class PriceLengthClassifier {
             sum += ((ArrayList<Long>)result.get("t_length")).get(0);
         }
         average0 = (float)sum/results.size();
-        fw.write("Die durchschnittliche Wortlänge bei Preisen zwischen 60 und 69 Euro ist " + average0 + " Wörter.");
+        fw.write("Die durchschnittliche Fragelänge bei Preisen zwischen 60 und 69 Euro ist " + average0 + " Wörter.");
         fw.write("\n");
 
         sum = 0;
@@ -70,7 +70,7 @@ public class PriceLengthClassifier {
             sum += ((ArrayList<Long>)result.get("t_length")).get(0);
         }
         average0 = (float)sum/results.size();
-        fw.write("Die durchschnittliche Wortlänge bei Preisen zwischen 70 und 79 Euro ist " + average0 + " Wörter.");
+        fw.write("Die durchschnittliche Fragelänge bei Preisen zwischen 70 und 79 Euro ist " + average0 + " Wörter.");
         fw.write("\n");
 
         sum = 0;
@@ -79,7 +79,7 @@ public class PriceLengthClassifier {
             sum += ((ArrayList<Long>)result.get("t_length")).get(0);
         }
         average0 = (float)sum/results.size();
-        fw.write("Die durchschnittliche Wortlänge bei Preisen zwischen 80 und 89 Euro ist " + average0 + " Wörter.");
+        fw.write("Die durchschnittliche Fragelänge bei Preisen zwischen 80 und 89 Euro ist " + average0 + " Wörter.");
         fw.write("\n");
 
         sum = 0;
@@ -88,7 +88,7 @@ public class PriceLengthClassifier {
             sum += ((ArrayList<Long>)result.get("t_length")).get(0);
         }
         average0 = (float)sum/results.size();
-        fw.write("Die durchschnittliche Wortlänge bei Preisen zwischen 90 und 100 Euro ist " + average0 + " Wörter.");
+        fw.write("Die durchschnittliche Fragelänge bei Preisen zwischen 90 und 100 Euro ist " + average0 + " Wörter.");
 
         fw.close();
     }
