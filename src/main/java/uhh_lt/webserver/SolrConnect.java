@@ -1,5 +1,6 @@
 package uhh_lt.webserver;
 
+import com.google.gson.JsonObject;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -17,7 +18,7 @@ public class SolrConnect {
     static SolrClient client;
 
     public SolrConnect() { // für ssh  : localhost , sonst ltdemos
-         client = new HttpSolrClient.Builder("http://ltdemos:8983/solr/fea-schema-less-2").build();
+         client = new HttpSolrClient.Builder("http://localhost:8983/solr/fea-schema-less-2").build();
     }
 
 
@@ -45,6 +46,7 @@ public class SolrConnect {
         inputDocument.addField("Expertensystem_wert", mc.getMieterwahrscheinlichkeit());
         inputDocument.addField("Watson", wmc.classify((String)object.get("T_Message")));
         inputDocument.addField( "Watson istmieter", wmc.istMieter());
+        inputDocument.addField("t_length", wordCount.countWord((String)object.get("T_Message")));
 
         try {
             client.add(inputDocument);
@@ -131,7 +133,6 @@ public class SolrConnect {
         SolrQuery query = new SolrQuery();
         // alle 1000 Daten werden berucksichtight
         query.setQuery("*:*").setFields("id","t_date","a_date").setStart(0).setRows(10000);
-
         QueryResponse response = null;
 
         try {
@@ -155,6 +156,8 @@ public class SolrConnect {
         fw.close();
 
     }
+
+
 
 }
 
