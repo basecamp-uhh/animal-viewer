@@ -18,7 +18,7 @@ import java.util.*;
 @SpringBootApplication
 public class ApplicationController  extends SpringBootServletInitializer {
 
-    private static MieterClassifier mieterClassifier;// = new MieterClassifier();
+    private static MieterClassifier mieterClassifier = new MieterClassifier();
     private static SolrConnect solrConnect = new SolrConnect();
 
     /**
