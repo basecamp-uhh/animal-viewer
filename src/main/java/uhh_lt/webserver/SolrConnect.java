@@ -129,37 +129,6 @@ public class SolrConnect {
             fw.write("\n");
         }
         fw.close();
-
-    }
-    public void SetDate() throws IOException {
-
-        // query.addFilterQuery("cat:electronics","store:amazon.com");
-        // query.set("defType", "edismax");
-        SolrQuery query = new SolrQuery();
-        // alle 1000 Daten werden berucksichtight
-        query.setQuery("*:*").setFields("id", "t_date", "a_date").setStart(0).setRows(10000);
-        QueryResponse response = null;
-
-        try {
-            response = client.query(query);
-        } catch (SolrServerException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        SolrDocumentList results = response.getResults();
-        FileWriter fw = new FileWriter("resources/dateId.txt");
-
-        for (int i = 0; i < results.size(); ++i) {
-            System.out.println(results.get(i));
-            fw.write(String.valueOf(results.get(i).get("id")));
-            fw.write(String.valueOf(results.get(i).get("t_date")));
-            fw.write(String.valueOf(results.get(i).get("a_date")));
-            fw.write("\n");
-        }
-        fw.close();
-
     }
 
     /**
@@ -434,41 +403,3 @@ public class SolrConnect {
 
     }
 }
-
-/**
- *  Object t_date = doc.getFieldValue("t_date");
- *             Object price = doc.getFieldValue("price");
- *             Object t_message = doc.getFieldValue("t_message");
- *             Object a_date = doc.getFieldValue("a_date");
- *             Object a_message = doc.getFieldValue("a_message");
- *             Object t_time = doc.getFieldValue("t_time");
- *             Object exp_bool = doc.getFieldValue("");
- */
-
-/**
- inputDocument.addField("id", oldDoc.getFieldValue("id"));
- inputDocument.addField("Q_date", oldDoc.getFieldValue("Q_Date"));
- inputDocument.addField("Q_subject", oldDoc.getFieldValue("Q_subject"));
- inputDocument.addField("price", oldDoc.getFieldValue("price"));
- inputDocument.addField("Q_message", oldDoc.getFieldValue("Q_message"));
- inputDocument.addField("T_summary", oldDoc.getFieldValue("T_message"));
- inputDocument.addField("A_date", oldDoc.getFieldValue("A_date"));
- inputDocument.addField("A_message", oldDoc.getFieldValue("A_message"));
- inputDocument.addField("_version_", oldDoc.getFieldValue("_version_"));
- **/
-
-/**try {
- client.deleteByQuery(""+fieldName+":"+inputDocument.getFieldValue(fieldName));  //löscht das ganze Objekt!!!
- } catch (SolrServerException e) {
- e.printStackTrace();
- } catch (IOException e) {
- e.printStackTrace();
- }
- try {
- client.commit();
- } catch (SolrServerException e) {
- e.printStackTrace();
- } catch (IOException e) {
- e.printStackTrace();
- }
- **/
