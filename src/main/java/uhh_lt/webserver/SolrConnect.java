@@ -12,6 +12,7 @@ import org.json.simple.JSONObject;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -191,6 +192,8 @@ public class SolrConnect {
         SolrDocument oldDoc = response.getResults().get(0);
         SolrInputDocument inputDocument = new SolrInputDocument();
 
+
+        /**
         inputDocument.addField("id", oldDoc.getFieldValue("id"));
         inputDocument.addField("Q_date", oldDoc.getFieldValue("Q_Date"));
         inputDocument.addField("Q_subject", oldDoc.getFieldValue("Q_subject"));
@@ -200,6 +203,7 @@ public class SolrConnect {
         inputDocument.addField("A_date", oldDoc.getFieldValue("A_date"));
         inputDocument.addField("A_message", oldDoc.getFieldValue("A_message"));
         inputDocument.addField("_version_", oldDoc.getFieldValue("_version_"));
+         **/
 
         HashMap<String, Object> map = new HashMap<String, Object>();
 
@@ -256,16 +260,29 @@ public class SolrConnect {
         SolrDocument oldDoc = response.getResults().get(0);
         SolrInputDocument inputDocument = new SolrInputDocument();
 
-        /**Collection<String> feldnamensliste = oldDoc.getFieldNames();
+        Collection<String> feldnamensliste = oldDoc.getFieldNames();
+        ArrayList<String> list = new ArrayList<String>();
 
+        /**
         Iterator it = feldnamensliste.iterator();
 
         while(it.hasNext()){
-            inputDocument.addField(oldDoc.getClass().getName(), oldDoc.getFieldValue(oldDoc.getClass().getName()));
+            list.add(it.toString());
             it.next();
         }
         **/
 
+        for (String str:feldnamensliste)
+        {
+            list.add(str);
+        }
+
+        for (int i=0; i<=list.size();i++)
+        {
+            inputDocument.addField(list.get(i), oldDoc.getFieldValue(list.get(i)));
+        }
+
+        /**
         inputDocument.addField("id", oldDoc.getFieldValue("id"));
         inputDocument.addField("Q_date", oldDoc.getFieldValue("Q_Date"));
         inputDocument.addField("Q_subject", oldDoc.getFieldValue("Q_subject"));
@@ -276,6 +293,7 @@ public class SolrConnect {
         inputDocument.addField("A_message", oldDoc.getFieldValue("A_message"));
         inputDocument.addField("_version_", oldDoc.getFieldValue("_version_"));
         inputDocument.addField("Rechtsexperten", oldDoc.getFieldValue("Rechtsexperten"));
+         **/
 
         HashMap<String, Object> map = new HashMap<String, Object>();
 
