@@ -103,6 +103,24 @@ public class SolrConnect {
         return out.toString();
     }
 
+    public String getFrage(String id) {
+    SolrQuery query = new SolrQuery();
+    query.setQuery("id:" + id).setFields("t_message").setStart(0).setRows(10000);
+
+    QueryResponse response = null;
+
+        try {
+            response = client.query(query);
+        } catch (SolrServerException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        SolrDocumentList results = response.getResults();
+        return String.valueOf(results.get(0).get("t_message"));
+    }
+
     public void IdSearch() throws IOException {
 
         // query.addFilterQuery("cat:electronics","store:amazon.com");
