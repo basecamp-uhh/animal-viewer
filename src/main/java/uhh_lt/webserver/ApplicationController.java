@@ -6,14 +6,19 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.*;
 
 @RestController
 @EnableAutoConfiguration
 @SpringBootApplication
 public class ApplicationController  extends SpringBootServletInitializer {
 
-    private static MieterClassifier mieterClassifier = new MieterClassifier();
+    private static MieterClassifier mieterClassifier;// = new MieterClassifier();
     private static SolrConnect solrConnect = new SolrConnect();
 
     /**
@@ -48,10 +53,98 @@ public class ApplicationController  extends SpringBootServletInitializer {
         return solrConnect.search(text);
     }
 
-    @RequestMapping("/")
-    String home(@RequestParam(value = "text", defaultValue = "") String text, @RequestParam(value = "format", defaultValue = "text") String format)
-    {
+    public String givenList_shouldReturnARandomElement(List<String> list) {
+        Random rand = new Random();
+        String randomElement = list.get(rand.nextInt(list.size()));
+        return randomElement;
+    }
 
-        return "hello world";
+    private List<String> readIdFile(String filename) {
+
+        Scanner s = null;
+        try {
+            s = new Scanner(new File(filename));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        List<String> out = new ArrayList<>();
+        while (s.hasNextLine()){
+            out.add(s.nextLine());
+        }
+        s.close();
+
+        return out;
+    }
+
+    @RequestMapping("/setMieter")
+    public void setMieter(@RequestParam(value = "id", defaultValue = "") String id,  HttpServletResponse httpResponse) {
+        System.out.println(id);
+        SolrConnect sc = new SolrConnect();
+        sc.MieterButtonsPushed(id, true);
+        try {
+            httpResponse.sendRedirect("/");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @RequestMapping("/setVermieter")
+    public void setVerMieter(@RequestParam(value = "id", defaultValue = "") String id,  HttpServletResponse httpResponse) {
+        System.out.println(id);
+        SolrConnect sc = new SolrConnect();
+        sc.MieterButtonsPushed(id, false);
+        try {
+            httpResponse.sendRedirect("/");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @RequestMapping("/setProblemfall")
+    public void setProblemfall(@RequestParam(value = "id", defaultValue = "") String id,  HttpServletResponse httpResponse) {
+        System.out.println(id);
+        SolrConnect sc = new SolrConnect();
+        sc.MieterProblemfallButtonPushed(id);
+        try {
+            httpResponse.sendRedirect("/");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @RequestMapping("/")
+    String home(@RequestParam(value = "", defaultValue = "") String text, @RequestParam(value = "format", defaultValue = "text") String format)
+    {
+        List<String> ids = readIdFile("resources/outputID.txt");
+        StringBuilder sb = new StringBuilder();
+
+
+
+        SolrConnect sc = new SolrConnect();
+        String id = givenList_shouldReturnARandomElement(ids);
+        String frage = sc.getFrage(id);
+
+        sb.append("<html><body>");
+
+        sb.append("<form action=\"/setMieter\" method=\"get\">\n")
+                .append("<textarea name=\"id\" >")
+                .append(id).append("</textarea><input type=\"submit\" value=\"Mieter\">\n" +
+                "</form>");
+
+        sb.append("<form action=\"/setVermieter\" method=\"get\">\n")
+                .append("<textarea name=\"id\" >")
+                .append(id).append("</textarea><input type=\"submit\" value=\"Vermieter\">\n" +
+                "</form>");
+
+        sb.append("<form action=\"/setProblemfall\" method=\"get\">\n")
+                .append("<textarea name=\"id\" >")
+                .append(id).append("</textarea><input type=\"submit\" value=\"Problemfall\">\n" +
+                "</form>");
+
+
+                sb.append("<p<ID: ").append(id).append("</p><p>Frage:</p><pre>");
+        sb.append(frage);
+        sb.append("</pre></body></html>");
+        return sb.toString();
     }
 }
