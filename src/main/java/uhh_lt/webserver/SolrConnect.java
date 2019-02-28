@@ -165,10 +165,21 @@ public class SolrConnect {
 
 
     /**
-     * Der SolrUpdater fügt der Datenbank eine neue Spalte hinzu und füllt diese mit den eingegebenen Daten
+     * Der SolrUpdater fügt der Datenbank eine neues Feld hinzu und füllt dieses mit den eingegebenen Daten
      * @param  docID Eine Datei mit Strings
      */
-    public void addMieterlabel(String docID, boolean istMieter)
+    public void addRechtsexpertenfeldMieter(String docID, boolean istMieter)
+    {
+        addSetFieldMieter(docID, "Rechtsexperten", istMieter);
+    }
+
+    /**
+     *
+     * @param docID
+     * @param fieldName
+     * @param object
+     */
+    public void addSetFieldMieter(String docID, String fieldName, Object object)
     {
         SolrQuery query = new SolrQuery();
         query.set("q", "id:"+ docID);
@@ -192,22 +203,27 @@ public class SolrConnect {
         SolrDocument oldDoc = response.getResults().get(0);
         SolrInputDocument inputDocument = new SolrInputDocument();
 
+        Collection<String> feldnamensliste = oldDoc.getFieldNames();
+        ArrayList<String> list = new ArrayList<String>();
 
-        /**
-        inputDocument.addField("id", oldDoc.getFieldValue("id"));
-        inputDocument.addField("Q_date", oldDoc.getFieldValue("Q_Date"));
-        inputDocument.addField("Q_subject", oldDoc.getFieldValue("Q_subject"));
-        inputDocument.addField("price", oldDoc.getFieldValue("price"));
-        inputDocument.addField("Q_message", oldDoc.getFieldValue("Q_message"));
-        inputDocument.addField("T_summary", oldDoc.getFieldValue("T_message"));
-        inputDocument.addField("A_date", oldDoc.getFieldValue("A_date"));
-        inputDocument.addField("A_message", oldDoc.getFieldValue("A_message"));
-        inputDocument.addField("_version_", oldDoc.getFieldValue("_version_"));
-         **/
+        System.out.println("feldnamensliste: "+feldnamensliste);
+
+        for (String str:feldnamensliste)
+        {
+            list.add(str);
+        }
+        System.out.println("list: "+list);
+
+        for (int i=0; i<list.size();i++)
+        {
+            inputDocument.addField(list.get(i), oldDoc.getFieldValue(list.get(i)));
+        }
+
+
 
         HashMap<String, Object> map = new HashMap<String, Object>();
 
-        map.put("set", istMieter);
+        map.put("set", object);
         inputDocument.addField("Rechtsexperten", map);
 
         try {
@@ -227,6 +243,8 @@ public class SolrConnect {
         }
     }
 
+
+
     /**
      * Es können gezielt Felder per ID in der Datenbank aufgerufen und verändert werden
      * @param fieldName Ein Feldnamen
@@ -234,12 +252,10 @@ public class SolrConnect {
      * @param object Eine zu setzende Änderunng
      **/
 
-    public void SolrChanges(String fieldName, String docID, Object object)
+    public void SolrChanges(String docID, String fieldName, Object object)
     {
-
-        object = false;
         SolrQuery query = new SolrQuery();
-        query.set("q", ""+fieldName+":"+docID);
+        query.set("q", "id:"+docID);
         QueryResponse response = null;
         try {
             response = client.query(query);
@@ -263,58 +279,26 @@ public class SolrConnect {
         Collection<String> feldnamensliste = oldDoc.getFieldNames();
         ArrayList<String> list = new ArrayList<String>();
 
-        /**
-        Iterator it = feldnamensliste.iterator();
-
-        while(it.hasNext()){
-            list.add(it.toString());
-            it.next();
-        }
-        **/
+        System.out.println("feldnamensliste: "+feldnamensliste);
 
         for (String str:feldnamensliste)
         {
             list.add(str);
         }
+        System.out.println("list: "+list);
 
-        for (int i=0; i<=list.size();i++)
+        for (int i=0; i<list.size();i++)
         {
             inputDocument.addField(list.get(i), oldDoc.getFieldValue(list.get(i)));
         }
 
-        /**
-        inputDocument.addField("id", oldDoc.getFieldValue("id"));
-        inputDocument.addField("Q_date", oldDoc.getFieldValue("Q_Date"));
-        inputDocument.addField("Q_subject", oldDoc.getFieldValue("Q_subject"));
-        inputDocument.addField("price", oldDoc.getFieldValue("price"));
-        inputDocument.addField("Q_message", oldDoc.getFieldValue("Q_message"));
-        inputDocument.addField("T_summary", oldDoc.getFieldValue("T_message"));
-        inputDocument.addField("A_date", oldDoc.getFieldValue("A_date"));
-        inputDocument.addField("A_message", oldDoc.getFieldValue("A_message"));
-        inputDocument.addField("_version_", oldDoc.getFieldValue("_version_"));
-        inputDocument.addField("Rechtsexperten", oldDoc.getFieldValue("Rechtsexperten"));
-         **/
-
         HashMap<String, Object> map = new HashMap<String, Object>();
-
-        try {
-            client.deleteByQuery(""+fieldName+":"+inputDocument.getFieldValue(fieldName));
-        } catch (SolrServerException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            client.commit();
-        } catch (SolrServerException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
         map.put("set", object);
 
-        inputDocument.addField(fieldName, map);
+        //inputDocument.addField(fieldName, map);
+        inputDocument.getField(fieldName).setValue(object, 1.0f);
+
 
         try {
             client.add(inputDocument);
@@ -344,3 +328,31 @@ public class SolrConnect {
  *             Object t_time = doc.getFieldValue("t_time");
  *             Object exp_bool = doc.getFieldValue("");
  */
+
+/**
+ inputDocument.addField("id", oldDoc.getFieldValue("id"));
+ inputDocument.addField("Q_date", oldDoc.getFieldValue("Q_Date"));
+ inputDocument.addField("Q_subject", oldDoc.getFieldValue("Q_subject"));
+ inputDocument.addField("price", oldDoc.getFieldValue("price"));
+ inputDocument.addField("Q_message", oldDoc.getFieldValue("Q_message"));
+ inputDocument.addField("T_summary", oldDoc.getFieldValue("T_message"));
+ inputDocument.addField("A_date", oldDoc.getFieldValue("A_date"));
+ inputDocument.addField("A_message", oldDoc.getFieldValue("A_message"));
+ inputDocument.addField("_version_", oldDoc.getFieldValue("_version_"));
+ **/
+
+/**try {
+ client.deleteByQuery(""+fieldName+":"+inputDocument.getFieldValue(fieldName));  //löscht das ganze Objekt!!!
+ } catch (SolrServerException e) {
+ e.printStackTrace();
+ } catch (IOException e) {
+ e.printStackTrace();
+ }
+ try {
+ client.commit();
+ } catch (SolrServerException e) {
+ e.printStackTrace();
+ } catch (IOException e) {
+ e.printStackTrace();
+ }
+ **/
