@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 
 import static junit.framework.Assert.assertEquals;
 
@@ -163,23 +162,147 @@ public class SolrConnect {
 
     }
 
+    /**
+     * Wenn der Mieter- oder Vermieterbutton gedrückt wurde, wird entweder ein neues Feld "Rechtsexperten_istmieter" oder
+     * "Rechtsexperten_istmieter2" angelegt und mit dem entsprechenden Wert gefüllt oder es wird nichts getan
+     * @param docID  Die ID, den Primärschlüssel, als String
+     * @param istMieter  Wenn es sich um einen Mieter handelt true, sonst false
+     */
+    public void MieterButtonsPushed(String docID, boolean istMieter)
+    {
+        SolrQuery query = new SolrQuery();
+        query.set("q", "id:"+ docID);
+        QueryResponse response = null;
+        try {
+            response = client.query(query);
+        } catch (SolrServerException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        SolrDocumentList docList = response.getResults();
+        assertEquals(docList.getNumFound(), 1);
+
+        for (SolrDocument doc : docList)
+        {
+            assertEquals((String) doc.getFieldValue("id"), docID);
+        }
+
+        SolrDocument oldDoc = response.getResults().get(0);
+
+        Collection<String> feldnamensliste = oldDoc.getFieldNames();
+        ArrayList<String> list = new ArrayList<String>();
+
+        for (String str:feldnamensliste)
+        {
+            list.add(str);
+        }
+
+        String feld = "Rechtsexperten_istmieter";
+        String feld2 = "Rechtsexperten_istmieter2";
+
+        if(!list.contains(feld))
+        {
+            addRechtsexpertenfeldMieter(docID, istMieter);
+        }
+
+        else if(list.contains(feld))
+        {
+            if(!list.contains(feld2))
+            {
+                addRechtsexpertenfeldMieter2(docID, istMieter);
+            }
+
+            else
+            {
+
+            }
+        }
+
+        else if(list.contains(feld2))
+        {
+
+        }
+    }
+
+
+    /**
+     * Fügt in Solr das neue Feld "Problemfall" hinzu und setzt dieses auf den eingegebenen Wert
+     * @param docID Die DokumentenID, der Primärschlüssel
+     */
+    public void MieterProblemfallButtonPushed(String docID)
+    {
+        SolrQuery query = new SolrQuery();
+        query.set("q", "id:"+ docID);
+        QueryResponse response = null;
+        try {
+            response = client.query(query);
+        } catch (SolrServerException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        SolrDocumentList docList = response.getResults();
+        assertEquals(docList.getNumFound(), 1);
+
+        for (SolrDocument doc : docList)
+        {
+            assertEquals((String) doc.getFieldValue("id"), docID);
+        }
+
+        SolrDocument oldDoc = response.getResults().get(0);
+
+        Collection<String> feldnamensliste = oldDoc.getFieldNames();
+        ArrayList<String> list = new ArrayList<String>();
+
+        for (String str:feldnamensliste)
+        {
+            list.add(str);
+        }
+
+        String feld = "Problemfall";
+
+        if(!list.contains(feld))
+        {
+            addField(docID, "Problemfall", true);
+        }
+
+        else
+        {
+
+        }
+    }
+
 
     /**
      * Der SolrUpdater fügt der Datenbank eine neues Feld hinzu und füllt dieses mit den eingegebenen Daten
-     * @param  docID Eine Datei mit Strings
+     * @param  docID Die ID, den Primärschlüssel, als String
+     * @param  istMieter Wenn es sich um einen Mieter handelt true, sonst false
      */
     public void addRechtsexpertenfeldMieter(String docID, boolean istMieter)
     {
-        addSetFieldMieter(docID, "Rechtsexperten", istMieter);
+        addField(docID, "Rechtsexperten_istmieter", istMieter);
     }
 
     /**
-     *
-     * @param docID
-     * @param fieldName
-     * @param object
+     * Der SolrUpdater fügt der Datenbank eine neues Feld hinzu und füllt dieses mit den eingegebenen Daten
+     * @param  docID Die ID, den Primärschlüssel, als String
+     * @param  istMieter Wenn es sich um einen Mieter handelt true, sonst false
      */
-    public void addSetFieldMieter(String docID, String fieldName, Object object)
+    public void addRechtsexpertenfeldMieter2(String docID, boolean istMieter)
+    {
+        addField(docID, "Rechtsexperten_istmieter2", istMieter);
+    }
+
+    /**
+     *Es wird ein neues Feld in Solr erzeugt und mit einem eingegebenen Wert gefüllt
+     * @param docID Die DokumentenID, der Primärschlüssel
+     * @param fieldName Der Name des Feldes als String
+     * @param object Der Wert, der dem Feld hinzugefügt werden soll
+     */
+    public void addField(String docID, String fieldName, Boolean object)
     {
         SolrQuery query = new SolrQuery();
         query.set("q", "id:"+ docID);
@@ -206,25 +329,19 @@ public class SolrConnect {
         Collection<String> feldnamensliste = oldDoc.getFieldNames();
         ArrayList<String> list = new ArrayList<String>();
 
-        System.out.println("feldnamensliste: "+feldnamensliste);
-
         for (String str:feldnamensliste)
         {
             list.add(str);
         }
-        System.out.println("list: "+list);
 
         for (int i=0; i<list.size();i++)
         {
             inputDocument.addField(list.get(i), oldDoc.getFieldValue(list.get(i)));
         }
 
-
-
-        HashMap<String, Object> map = new HashMap<String, Object>();
-
-        map.put("set", object);
-        inputDocument.addField("Rechtsexperten", map);
+        //HashMap<String, Object> map = new HashMap<String, Object>();
+        //map.put("set", object);
+        inputDocument.addField(fieldName, object);
 
         try {
             client.add(inputDocument);
@@ -244,7 +361,6 @@ public class SolrConnect {
     }
 
 
-
     /**
      * Es können gezielt Felder per ID in der Datenbank aufgerufen und verändert werden
      * @param fieldName Ein Feldnamen
@@ -252,7 +368,7 @@ public class SolrConnect {
      * @param object Eine zu setzende Änderunng
      **/
 
-    public void SolrChanges(String docID, String fieldName, Object object)
+    public void ChangeValueByFieldMieter(String docID, String fieldName, Object object)
     {
         SolrQuery query = new SolrQuery();
         query.set("q", "id:"+docID);
