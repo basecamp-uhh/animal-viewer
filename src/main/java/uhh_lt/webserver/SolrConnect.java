@@ -155,7 +155,7 @@ public class SolrConnect {
      * @param docID  Die ID, den Primärschlüssel, als String
      * @param istMieter  Wenn es sich um einen Mieter handelt true, sonst false
      */
-    public void MieterButtonsPushed(String docID, boolean istMieter)
+    public void MieterButtonsPushed(String docID, Object istMieter)
     {
         SolrQuery query = new SolrQuery();
         query.set("q", "id:"+ docID);
@@ -268,7 +268,7 @@ public class SolrConnect {
      * @param  docID Die ID, den Primärschlüssel, als String
      * @param  istMieter Wenn es sich um einen Mieter handelt true, sonst false
      */
-    public void addRechtsexpertenfeldMieter(String docID, boolean istMieter)
+    public void addRechtsexpertenfeldMieter(String docID, Object istMieter)
     {
         addField(docID, "Rechtsexperten_istmieter", istMieter);
     }
@@ -278,7 +278,7 @@ public class SolrConnect {
      * @param  docID Die ID, den Primärschlüssel, als String
      * @param  istMieter Wenn es sich um einen Mieter handelt true, sonst false
      */
-    public void addRechtsexpertenfeldMieter2(String docID, boolean istMieter)
+    public void addRechtsexpertenfeldMieter2(String docID, Object istMieter)
     {
         addField(docID, "Rechtsexperten_istmieter2", istMieter);
     }
@@ -289,7 +289,7 @@ public class SolrConnect {
      * @param fieldName Der Name des Feldes als String
      * @param object Der Wert, der dem Feld hinzugefügt werden soll
      */
-    public void addField(String docID, String fieldName, Boolean object)
+    public void addField(String docID, String fieldName, Object object)
     {
         SolrQuery query = new SolrQuery();
         query.set("q", "id:"+ docID);
@@ -382,13 +382,10 @@ public class SolrConnect {
         Collection<String> feldnamensliste = oldDoc.getFieldNames();
         ArrayList<String> list = new ArrayList<String>();
 
-        System.out.println("feldnamensliste: "+feldnamensliste);
-
         for (String str:feldnamensliste)
         {
             list.add(str);
         }
-        System.out.println("list: "+list);
 
         for (int i=0; i<list.size();i++)
         {
@@ -442,4 +439,39 @@ public class SolrConnect {
             e.printStackTrace();
         }
     }
+
+    /**
+     *
+     */
+    public void DauerLängeComparer()
+    {
+        SolrQuery query = new SolrQuery();
+        query.set("q", "*:*");
+        query.setSort("t_time", SolrQuery.ORDER.asc);
+        QueryResponse response = null;
+        try {
+            response = client.query(query);
+        } catch (SolrServerException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        /**
+        SolrDocumentList results = new SolrDocumentList();
+        results = response.getResults().get(0);
+        for (int i = 0; i < results.size(); ++i) {
+            System.out.println(results.get(i));}
+
+        Collection<String> feldnamensliste = ((SolrDocument) results).getFieldNames();
+        ArrayList<String> list = new ArrayList<String>();
+
+        for (String str:feldnamensliste)
+        {
+            list.add(str);
+        }
+        System.out.println(list);
+        */
+    }
+
 }

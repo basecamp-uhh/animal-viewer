@@ -11,7 +11,7 @@ public class SolrConnectTester {
     public static void main(String[] args)
     {
         SolrConnect connect = new SolrConnect();
-        connect.MieterButtonsPushed("1234", true);
+        connect.DauerLängeComparer();
 
         /**
         SolrConnect connect = new SolrConnect();

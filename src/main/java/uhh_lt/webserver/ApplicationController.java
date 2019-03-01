@@ -147,4 +147,47 @@ public class ApplicationController  extends SpringBootServletInitializer {
         sb.append("</pre></body></html>");
         return sb.toString();
     }
+
+    @RequestMapping("/stats")
+    String stats()
+    {
+        StringBuilder sb = new StringBuilder();
+
+
+        sb.append("<html><head>");
+
+        sb.append("  <script type=\"text/javascript\" src=\"https://www.gstatic.com/charts/loader.js\"></script>");
+
+        sb.append("<script type=\"text/javascript\">" +
+                        "google.charts.load('current', {packages: ['corechart', 'line']});\n" +
+                        "google.charts.setOnLoadCallback(drawCurveTypes);\n" +
+                        "\n" +
+                        "function drawCurveTypes() {\n" +
+                        "      var data = new google.visualization.DataTable();\n" +
+                        "      data.addColumn('number', 'time');\n" +
+                        "      data.addColumn('number', 'price');\n" +
+                        "\n" +
+                        "      data.addRows([\n" +
+                        "        [50, 25],    [60, 30], [100, 40]   \n" +
+                        "      ]);\n" +
+                        "\n" +
+                        "      var options = {\n" +
+                        "        hAxis: {\n" +
+                        "          title: 'Time'\n" +
+                        "        },\n" +
+                        "        vAxis: {\n" +
+                        "          title: 'Popularity'\n" +
+                        "        },\n" +
+                        "        series: {\n" +
+                        "          1: {curveType: 'function'}\n" +
+                        "        }\n" +
+                        "      };\n" +
+                        "\n" +
+                        "      var chart = new google.visualization.LineChart(document.getElementById('chart_div'));\n" +
+                        "      chart.draw(data, options);\n" +
+                        "    }" +
+                "</script></head><body>\"  <div id='chart_div'></div>\"");
+        sb.append("</body></html>");
+        return sb.toString();
+    }
 }

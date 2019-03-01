@@ -39,7 +39,6 @@ public class MieterClassifier
 
         InputStream input = getClass().getClassLoader().getResourceAsStream(Filename);
 
-
         BufferedReader TSVFile = null;
         try {
             TSVFile = new BufferedReader(
@@ -184,17 +183,15 @@ public class MieterClassifier
      * @param text Ein String
      * @return true wenn Mieter, false wenn Vermieter
      */
-    public boolean istMieter(String text)
-    {
+    public Object istMieter(String text) {
         float p = classify(text);
 
-        if(p > 0.5)
-        {
+        if (p > 0.5) {
             return true;
-        }
-         else
-        {
+        } else if (p < 0.5) {
             return false;
+        } else {
+            return "unknown";
         }
     }
 }
