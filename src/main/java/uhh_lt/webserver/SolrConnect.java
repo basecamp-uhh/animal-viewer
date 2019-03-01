@@ -102,6 +102,25 @@ public class SolrConnect {
         return out.toString();
     }
 
+    public boolean isFullyAnnotatedMieter(String id){
+        SolrQuery query = new SolrQuery();
+        query.setQuery("id:" + id + "AND Rechtsexperten_istmieter2:*");
+        QueryResponse response = null;
+
+        try {
+            response = client.query(query);
+        } catch (SolrServerException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (response.getResults().size()>0) {
+            return false;
+        }
+        return true;
+    }
+
     public String getFrage(String id) {
     SolrQuery query = new SolrQuery();
     query.setQuery("id:" + id).setFields("t_message").setStart(0).setRows(10000);
