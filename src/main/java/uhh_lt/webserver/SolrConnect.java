@@ -420,4 +420,26 @@ public class SolrConnect {
         }
 
     }
+
+    /**
+     * Anhand einer ID wird das JSON-Objekt aus Solr gelöscht
+     * @param docID Eine ID als String
+     */
+    public void SolrDeleteByID(String docID)
+    {
+        try {
+            client.deleteById(docID);
+        } catch (SolrServerException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            client.commit();
+        } catch (SolrServerException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
