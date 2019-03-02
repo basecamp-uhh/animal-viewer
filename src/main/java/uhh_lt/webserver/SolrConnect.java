@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import static junit.framework.Assert.assertEquals;
 
@@ -443,10 +444,10 @@ public class SolrConnect {
     /**
      *
      */
-    public void DauerLängeComparer()
-    {
+    public String DauerLängeComparer() {
         SolrQuery query = new SolrQuery();
         query.set("q", "*:*");
+        query.setStart(0);
         query.setSort("t_time", SolrQuery.ORDER.asc);
         QueryResponse response = null;
         try {
@@ -457,21 +458,27 @@ public class SolrConnect {
             e.printStackTrace();
         }
 
-        /**
-        SolrDocumentList results = new SolrDocumentList();
-        results = response.getResults().get(0);
-        for (int i = 0; i < results.size(); ++i) {
-            System.out.println(results.get(i));}
-
-        Collection<String> feldnamensliste = ((SolrDocument) results).getFieldNames();
-        ArrayList<String> list = new ArrayList<String>();
-
-        for (String str:feldnamensliste)
-        {
-            list.add(str);
+        SolrDocumentList results = response.getResults();
+        //SolrDocument doc = new SolrDocument();
+        Object doc = "";
+        ArrayList<Object> array1 = new ArrayList<Object>();
+        ArrayList<Object> array2 = new ArrayList<Object>();
+        for (SolrDocument document : results) {
+            doc = document.getFieldValue("t_time");
+            array1.add(doc);
         }
-        System.out.println(list);
-        */
-    }
+        for (SolrDocument document : results) {
+            doc = document.getFieldValue("t_length");
+            array2.add(doc);
+        }
 
+        String eingabe = "";
+        for (int i = 0; array1.size() < i; i++)
+        {
+            Object obj1 = array1.get(i);
+            Object obj2 = array2.get(i);
+            eingabe = "[" + obj1 + ":" + obj2 + "],";
+        }
+        return eingabe;
+    }
 }

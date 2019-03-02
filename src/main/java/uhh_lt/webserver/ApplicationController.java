@@ -168,7 +168,8 @@ public class ApplicationController  extends SpringBootServletInitializer {
                         "      data.addColumn('number', 'price');\n" +
                         "\n" +
                         "      data.addRows([\n" +
-                        "        [50, 25],    [60, 30], [100, 40]   \n" +
+                        "      SolrConnect solrConnect = new SolrConnect();\n" +
+                        "      solrConnect.DauerLängeComparer(); \n" +
                         "      ]);\n" +
                         "\n" +
                         "      var options = {\n" +
