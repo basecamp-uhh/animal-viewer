@@ -169,7 +169,7 @@ public class ApplicationController  extends SpringBootServletInitializer {
                         "\n" +
                         "      data.addRows([\n" +
                         "      SolrConnect solrConnect = new SolrConnect();\n" +
-                        "      solrConnect.DauerLängeComparer(); \n" +
+                        "      solrConnect.DauerPreisComparer(); \n" +
                         "      ]);\n" +
                         "\n" +
                         "      var options = {\n" +
@@ -177,7 +177,7 @@ public class ApplicationController  extends SpringBootServletInitializer {
                         "          title: 'Time'\n" +
                         "        },\n" +
                         "        vAxis: {\n" +
-                        "          title: 'Popularity'\n" +
+                        "          title: 'Price'\n" +
                         "        },\n" +
                         "        series: {\n" +
                         "          1: {curveType: 'function'}\n" +

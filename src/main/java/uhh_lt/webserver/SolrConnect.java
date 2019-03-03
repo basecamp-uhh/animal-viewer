@@ -23,10 +23,9 @@ public class SolrConnect {
 
     private static SolrClient client;
 
-    public SolrConnect() { // für ssh  : localhost , sonst ltdemos
+    public SolrConnect() { // für ssh  : localhost , sonst ltdemos:8983/solr/fea-schema-less-2
          client = new HttpSolrClient.Builder("http://ltdemos:8983/solr/fea-schema-less-2").build();
     }
-
 
     public void store(JSONObject object) {
        store(object, true);
@@ -444,7 +443,7 @@ public class SolrConnect {
     /**
      *
      */
-    public String DauerLängeComparer() {
+    public String DauerPreisComparer() {
         SolrQuery query = new SolrQuery();
         query.set("q", "*:*");
         query.setStart(0);
@@ -468,7 +467,7 @@ public class SolrConnect {
             array1.add(doc);
         }
         for (SolrDocument document : results) {
-            doc = document.getFieldValue("t_length");
+            doc = document.getFieldValue("price");
             array2.add(doc);
         }
 

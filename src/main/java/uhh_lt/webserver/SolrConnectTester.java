@@ -11,7 +11,7 @@ public class SolrConnectTester {
     public static void main(String[] args)
     {
         SolrConnect connect = new SolrConnect();
-        connect.DauerLängeComparer();
+        connect.DauerPreisComparer();
 
         /**
         SolrConnect connect = new SolrConnect();
@@ -21,8 +21,10 @@ public class SolrConnectTester {
         obj.put("R_posted", "2017-11-20 12:37:46");
         obj.put("price", 676);
         obj.put("T_Message", "Blablabla");
+        obj.put("t_length", 234);
+        obj.put("t_time", 50);
 
         connect.store(obj);
-        **/
+        */
    }
 }
