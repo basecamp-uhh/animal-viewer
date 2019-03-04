@@ -6,7 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import uhh_lt.classifier.MieterClassifier;
 
 import javax.servlet.http.HttpServletResponse;
@@ -154,7 +155,7 @@ public class ApplicationController  extends SpringBootServletInitializer {
         return sb.toString();
     }
 
-    @RequestMapping("/stats")
+    @RequestMapping("/hello")
     String stats()
     {
         StringBuilder sb = new StringBuilder();
@@ -224,16 +225,30 @@ public class ApplicationController  extends SpringBootServletInitializer {
     }
 
 
-    // /hello?name=kotlin
-    @RequestMapping("/hello")
+    @RequestMapping("/stats")
     public String mainWithParam(
             @RequestParam(name = "name", required = false, defaultValue = "")
                     String name, Model model) {
+        SolrConnect sc = new SolrConnect();
+        model.addAttribute("message", sc.DauerPreisComparer());
 
-        model.addAttribute("message", name);
-
-        return "welcome"; //view
+        return "charts"; //view
     }
+
+    @RequestMapping("/table")
+    public String mainy(
+            @RequestParam(name = "name", required = false, defaultValue = "")
+                    String name, Model model) {
+        SolrConnect sc = new SolrConnect();
+        model.addAttribute("w11", sc.getWatson11());
+        model.addAttribute("w12", sc.getWatson12());
+        model.addAttribute("w21", sc.getWatson21());
+        model.addAttribute("w22", sc.getWatson22());
+
+
+        return "table"; //view
+    }
+
 
     @RequestMapping("/test")
     public String main(Model model) {
