@@ -7,6 +7,7 @@ import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import uhh_lt.classifier.MieterClassifier;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
