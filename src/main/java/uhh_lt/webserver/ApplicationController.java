@@ -4,6 +4,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -13,7 +15,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 
-@RestController
+//@RestController
+@Controller
 @EnableAutoConfiguration
 @SpringBootApplication
 public class ApplicationController  extends SpringBootServletInitializer {
@@ -190,4 +193,25 @@ public class ApplicationController  extends SpringBootServletInitializer {
         sb.append("</body></html>");
         return sb.toString();
     }
+
+
+    // /hello?name=kotlin
+    @RequestMapping("/hello")
+    public String mainWithParam(
+            @RequestParam(name = "name", required = false, defaultValue = "")
+                    String name, Model model) {
+
+        model.addAttribute("message", name);
+
+        return "welcome"; //view
+    }
+
+    @RequestMapping("/test")
+    public String main(Model model) {
+        model.addAttribute("message", "asdf");
+        model.addAttribute("tasks", "quert");
+
+        return "welcome"; //view
+    }
+
 }
