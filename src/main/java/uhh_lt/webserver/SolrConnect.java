@@ -9,14 +9,14 @@ import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
 import org.json.simple.JSONObject;
+import uhh_lt.classifier.MieterClassifier;
+import uhh_lt.classifier.WatsonMieterClassifier;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.*;
 
+import static java.lang.Math.toIntExact;
 import static junit.framework.Assert.assertEquals;
 
 public class SolrConnect {
@@ -162,9 +162,7 @@ public class SolrConnect {
         QueryResponse response = null;
         try {
             response = client.query(query);
-        } catch (SolrServerException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (SolrServerException | IOException e) {
             e.printStackTrace();
         }
 
@@ -194,24 +192,11 @@ public class SolrConnect {
             addRechtsexpertenfeldMieter(docID, istMieter);
         }
 
-        else if(list.contains(feld))
-        {
-            if(!list.contains(feld2))
+        else if(list.contains(feld) && !list.contains(feld2))
             {
                 addRechtsexpertenfeldMieter2(docID, istMieter);
             }
-
-            else
-            {
-
-            }
-        }
-
-        else if(list.contains(feld2))
-        {
-
-        }
-    }
+}
 
 
     /**
@@ -254,11 +239,6 @@ public class SolrConnect {
         if(!list.contains(feld))
         {
             addField(docID, "Problemfall", true);
-        }
-
-        else
-        {
-
         }
     }
 
@@ -355,7 +335,7 @@ public class SolrConnect {
      * @param object Eine zu setzende Änderunng
      **/
 
-    public void ChangeValueByFieldMieter(String docID, String fieldName, Object object)
+    public void ChangeValueByField(String docID, String fieldName, Object object)
     {
         SolrQuery query = new SolrQuery();
         query.set("q", "id:"+docID);
@@ -441,13 +421,14 @@ public class SolrConnect {
     }
 
     /**
-     *
+     * Es wird ein String erstellt, der aufsteigend nach Dauer sortiert eine Reihe von [Dauer, Preis] Substrings
+     * enthält.
      */
     public String DauerPreisComparer() {
+        StringBuilder sb = new StringBuilder();
         SolrQuery query = new SolrQuery();
         query.set("q", "*:*");
-        query.setStart(0);
-        query.setSort("t_time", SolrQuery.ORDER.asc);
+        query.setRows(10001);
         QueryResponse response = null;
         try {
             response = client.query(query);
@@ -458,26 +439,171 @@ public class SolrConnect {
         }
 
         SolrDocumentList results = response.getResults();
-        //SolrDocument doc = new SolrDocument();
+
         Object doc = "";
+        Object doc1 = "";
         ArrayList<Object> array1 = new ArrayList<Object>();
         ArrayList<Object> array2 = new ArrayList<Object>();
         for (SolrDocument document : results) {
-            doc = document.getFieldValue("t_time");
+            doc = ((List)document.getFieldValue("t_time")).get(0);
             array1.add(doc);
-        }
-        for (SolrDocument document : results) {
-            doc = document.getFieldValue("price");
-            array2.add(doc);
+            doc1 = ((List)document.getFieldValue("price")).get(0);
+            array2.add(doc1);
         }
 
-        String eingabe = "";
-        for (int i = 0; array1.size() < i; i++)
+        HashMap<Integer, String> hmap = new HashMap<Integer, String>();
+        for(int i=0;i<array1.size(); i++)
         {
-            Object obj1 = array1.get(i);
-            Object obj2 = array2.get(i);
-            eingabe = "[" + obj1 + ":" + obj2 + "],";
+            int key = Integer.valueOf((array1.get(i)).toString());
+
+            hmap.put(key, array2.get(i).toString());
         }
-        return eingabe;
+
+        Map<Integer, String> map = new TreeMap<Integer, String>(hmap);
+
+        Set set2 = map.entrySet();
+        Iterator iterator2 = set2.iterator();
+        while(iterator2.hasNext()) {
+            Map.Entry me2 = (Map.Entry)iterator2.next();
+
+            sb.append("[" + me2.getKey() + "," + me2.getValue()+ "],");
+        }
+
+        return sb.toString().substring(0,sb.length()-1);
+    }
+
+    /**
+     * Eine allgemeine Methode um Übereinstimmungen zwischen den Listen oder  Watson mit den Rechtsexperten übereinstimmt
+     */
+    public int getÜbereinstimmung(String fieldname1, Object param1, Object param2)
+    {
+        SolrConnect solrconnect = new SolrConnect();
+        SolrQuery query = new SolrQuery();
+        query.set("q", ""+fieldname1+":"+param1+" AND "+"Rechtsexperten_istmieter"+":"+param2);
+        query.setRows(10001);
+        QueryResponse response = null;
+        try {
+            response = client.query(query);
+        } catch (SolrServerException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        SolrDocumentList results = response.getResults();
+        long key = results.getNumFound();
+        int keyInt = toIntExact(key);
+        return keyInt;
+    }
+
+    /**
+     * Ermittelt, wie häufig Watson mit den Rechtsexperten mit jeweils true übereinstimmt
+     */
+    public int getWatson11()
+    {
+        return getÜbereinstimmung("Watson_istmieter", true, true);
+    }
+
+    /**
+     * Ermittelt, wie häufig Watson mit den Rechtsexperten mit jeweils false übereinstimmt
+     */
+    public int getWatson22()
+    {
+        return getÜbereinstimmung("Watson_istmieter", false, false);
+    }
+
+    /**
+     * Ermittelt, wie häufig Watson mit den Rechtsexperten nicht übereinstimmt, da Watson true sagt und die Rechtsexperten
+     * sagen false
+     */
+    public int getWatson12()
+    {
+        return getÜbereinstimmung("Watson_istmieter", true, false);
+    }
+
+    /**
+     * Ermittelt, wie häufig Watson mit den Rechtsexperten nicht übereinstimmt, da Watson false sagt und die Rechtsexperten
+     * sagen true
+     */
+    public int getWatson21()
+    {
+        return getÜbereinstimmung("Watson_istmieter",false, true);
+    }
+
+    /**
+     * Ermittelt, wie häufig die Listen mit den Rechtsexperten übereinstimmen mit jeweils true
+     */
+    public int getListe11()
+    {
+        return getÜbereinstimmung("Expertensystem_istmieter", true, true);
+    }
+
+    /**
+     * Ermittelt, wie häufig die Listen mit den Rechtsexperten übereinstimmen mit jeweils false
+     */
+    public int getListe22()
+    {
+        return getÜbereinstimmung("Expertensystem_istmieter", false, false);
+    }
+
+    /**
+     * Ermittelt, wie häufig die Listen mit den Rechtsexperten nicht übereinstimmt, da die Listen true und die
+     * Rechtsexperten false sagen
+     */
+    public int getListe12()
+    {
+        return getÜbereinstimmung("Expertensystem_istmieter",true, false);
+    }
+
+    /**
+     * Ermittelt, wie häufig die Listen mit den Rechtsexperten nicht übereinstimmt, da die Listen false und die
+     * Rechtsexperten true sagen
+     */
+    public int getListe21()
+    {
+        System.out.println(getÜbereinstimmung("Expertensystem_istmieter",false, true));
+        return getÜbereinstimmung("Expertensystem_istmieter",false, true);
+    }
+
+    /**
+     * Gibt die Gesamtzahl der Felder "Rechtsexperten_istmieter" zurück.
+     */
+    public int getAnzahlRechtsexpertenfelder()
+    {
+        SolrConnect solrconnect = new SolrConnect();
+        SolrQuery query = new SolrQuery();
+        query.set("q", "Rechtsexperten_istmieter:*");
+        query.setRows(10001);
+        QueryResponse response = null;
+        try {
+            response = client.query(query);
+        } catch (SolrServerException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        SolrDocumentList results = response.getResults();
+        long key = results.getNumFound();
+        int keyInt = toIntExact(key);
+        return keyInt;
+    }
+
+    /**
+     * Gibt die Genauigkeit der Listen aus
+     */
+    public float getGenauigkeitListen()
+    {
+        int richtige = getListe11() + getListe22();
+        System.out.println(richtige);
+        System.out.println(richtige / getAnzahlRechtsexpertenfelder());
+        return (float) richtige / getAnzahlRechtsexpertenfelder();
+    }
+
+    /**
+     * Gibt Genauigkeit von Watson aus
+     */
+    public float getGenauigkeitWatson()
+    {
+        int richtige = getWatson11() + getWatson22();
+        return (float) richtige / getAnzahlRechtsexpertenfelder();
     }
 }

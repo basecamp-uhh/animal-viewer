@@ -1,4 +1,4 @@
-package uhh_lt.webserver;
+package uhh_lt.classifier;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -10,16 +10,16 @@ import java.util.HashMap;
  * aus Sicht eines Vermieters oder Mieters geschrieben wurde. Hierfür wird eine Wahrscheinlichkeit ausgegeben.
  */
 
-public class MieterClassifier
+public class MieterClassifier implements ClassifierInterface
 {
     private HashMap<String, Integer> vermieterTerms = new HashMap<>();
     private HashMap<String, Integer> mieterTerms = new HashMap<>();
     private int vermieterScore;
     private int mieterScore;
-    private float mieterWahrscheinlichkeit;
+    private double mieterWahrscheinlichkeit;
 
 
-    MieterClassifier()
+    public MieterClassifier()
     {
         DateiEinleser("Mieter", mieterTerms);
         DateiEinleser("Vermieter", vermieterTerms);
@@ -78,7 +78,7 @@ public class MieterClassifier
      * @return float Die Mieterwahrscheinlichkeit
      */
 
-    float classify(String text)
+    public Double classify(String text)
     {
         System.out.println(text);
 
@@ -104,10 +104,20 @@ public class MieterClassifier
         }
 
         if (mieterScore + vermieterScore == 0) {
-            return 0.5f;
+            return 0.5;
         }
-        mieterWahrscheinlichkeit = (float)mieterScore / (mieterScore + vermieterScore);
+        mieterWahrscheinlichkeit = (double)mieterScore / (mieterScore + vermieterScore);
         return mieterWahrscheinlichkeit;
+    }
+
+    @Override
+    public boolean istMieter() {
+        if (mieterWahrscheinlichkeit > 0.5) {
+            return true;
+        } else if (mieterWahrscheinlichkeit < 0.5) {
+            return false;
+        }
+        return false;
     }
 
     /**
@@ -116,7 +126,7 @@ public class MieterClassifier
      * @return float Die Vermieterwahrscheinlichkeit
      */
 
-    public float getVermieterwahrscheinlichkeit()
+    public Double getVermieterwahrscheinlichkeit()
     {
         return 1-mieterWahrscheinlichkeit;
     }
@@ -127,7 +137,7 @@ public class MieterClassifier
      * @return float die Mieterwahrscheinlichkeit
      */
 
-    public float getMieterwahrscheinlichkeit()
+    public Double getMieterwahrscheinlichkeit()
     {
         return mieterWahrscheinlichkeit;
     }
@@ -137,7 +147,7 @@ public class MieterClassifier
      * @return Einen String
      */
 
-    String getMieterwahrscheinlichkeitAsString()
+    public String getMieterwahrscheinlichkeitAsString()
     {
         String mieterwahrscheinlichkeitString = "";
 
@@ -184,7 +194,7 @@ public class MieterClassifier
      * @return true wenn Mieter, false wenn Vermieter
      */
     public Object istMieter(String text) {
-        float p = classify(text);
+        double p = classify(text);
 
         if (p > 0.5) {
             return true;

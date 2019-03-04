@@ -4,14 +4,19 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import uhh_lt.classifier.MieterClassifier;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.Scanner;
 
 @RestController
 @EnableAutoConfiguration
@@ -152,11 +157,12 @@ public class ApplicationController  extends SpringBootServletInitializer {
     String stats()
     {
         StringBuilder sb = new StringBuilder();
-
+        SolrConnect sc = new SolrConnect();
 
         sb.append("<html><head>");
 
-        sb.append("  <script type=\"text/javascript\" src=\"https://www.gstatic.com/charts/loader.js\"></script>");
+        sb.append("<script type=\"text/javascript\" src=\"https://www.gstatic.com/charts/loader.js\"></script>\n");
+
 
         sb.append("<script type=\"text/javascript\">" +
                         "google.charts.load('current', {packages: ['corechart', 'line']});\n" +
@@ -167,9 +173,8 @@ public class ApplicationController  extends SpringBootServletInitializer {
                         "      data.addColumn('number', 'time');\n" +
                         "      data.addColumn('number', 'price');\n" +
                         "\n" +
-                        "      data.addRows([\n" +
-                        "      SolrConnect solrConnect = new SolrConnect();\n" +
-                        "      solrConnect.DauerPreisComparer(); \n" +
+                        "      data.addRows([\n"
+        ).append(sc.DauerPreisComparer()).append("\n" +
                         "      ]);\n" +
                         "\n" +
                         "      var options = {\n" +
@@ -187,7 +192,32 @@ public class ApplicationController  extends SpringBootServletInitializer {
                         "      var chart = new google.visualization.LineChart(document.getElementById('chart_div'));\n" +
                         "      chart.draw(data, options);\n" +
                         "    }" +
-                "</script></head><body>\"  <div id='chart_div'></div>\"");
+                "</script></head><body>\"  <div id='chart_div'></div>\");\n");
+
+        sb.append("<h2> Vergleich Watson mit </h2>); \n");
+
+        /**sb.append("<script type=\"text/javascript\">" +
+            "google.charts.load('current', {'packages':['table']});\n" +
+            "google.charts.setOnLoadCallback(drawTable);\n" +
+
+            "function drawTable() {\n" +
+            "var data = new google.visualization.DataTable();\n" +
+            "data.addColumn('number', '1');\n" +
+            "data.addColumn('number', '2');\n" +
+            "data.addRows([\n" +
+            "[sc.getWatson11();,  sc.getWatson12();],\n" +
+            "[sc.getWatson21();,  sc.getWatson22();],\n" +
+            "]);\n" +
+
+            "var table = new google.visualization.Table(document.getElementById('table_div'));\n" +
+
+            "table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});\n"+
+            "}\n" +
+            "</script>  );
+
+        sb.append("<h1> Dauer-Längen-Vergleich</h1>; \n");
+        sb.append("<div id=table_div></div>\");\n");
+*/
         sb.append("</body></html>");
         return sb.toString();
     }

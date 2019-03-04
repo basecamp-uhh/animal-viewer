@@ -1,4 +1,4 @@
-package uhh_lt.webserver;
+package uhh_lt.classifier;
 
 import com.ibm.watson.developer_cloud.natural_language_classifier.v1.NaturalLanguageClassifier;
 import com.ibm.watson.developer_cloud.natural_language_classifier.v1.model.Classification;
@@ -6,7 +6,7 @@ import com.ibm.watson.developer_cloud.natural_language_classifier.v1.model.Class
 import com.ibm.watson.developer_cloud.natural_language_classifier.v1.model.ClassifyOptions;
 import com.ibm.watson.developer_cloud.service.security.IamOptions;
 
-public class WatsonMieterClassifier {
+public class WatsonMieterClassifier implements ClassifierInterface {
 
     NaturalLanguageClassifier naturalLanguageClassifier;
     Classification classification;
@@ -20,7 +20,8 @@ public WatsonMieterClassifier() {
     naturalLanguageClassifier = new NaturalLanguageClassifier(options);
 }
 
-    Double classify(String neueFrage) {
+    @Override
+    public Double classify(String neueFrage) {
 
         neueFrage = neueFrage.substring(0, Math.min(neueFrage.length(), 1000));
 
@@ -39,20 +40,24 @@ System.out.println(classification);
         return 0.0;
     }
 
-    /**
-     * Gibt zurück, ob es sich um einen Mieter handelt
-     * @return true wenn Mieter, false wenn Vermieter
-     */
+
+    @Override
     public boolean istMieter()
     {
         if(classification.getTopClass().compareTo("Mieter") == 0)
         {
             return true;
         }
-        else
+        return false;
+    }
+
+    @Override
+    public Object istMieter(String text) {
+        if(classification.getTopClass().compareTo("Mieter") == 0)
         {
-            return false;
+            return true;
         }
+        return false;
     }
 
 }
