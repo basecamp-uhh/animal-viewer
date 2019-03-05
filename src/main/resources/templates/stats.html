@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script th:text="'var information =[' + ${message}+ '];'"></script>
+    <script type="text/javascript">google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+function drawChart() {
+        information.unshift(['Length of Time','Price']);
+        console.log(information);
+        var data = google.visualization.arrayToDataTable(information);
+
+        var options = {
+          title: 'Length of Time vs. Price Comparison',
+          hAxis: {title: 'Length of Time', minValue: 0, maxValue: 50},
+          vAxis: {title: 'Price', minValue: 0, maxValue: 180},
+          legend: 'none'
+        };
+
+        var chart = new google.visualization.ScatterChart(document.getElementById('chart_div'));
+
+        chart.draw(data, options);
+      }
+</script>
+    <script th:text=" 'var information2 =[' + ${message1}+ '];'"
+></script>
+    <script type="text/javascript">google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+function drawChart() {
+        information.unshift(['Text Length','Price']);
+        console.log(information2);
+        var data = google.visualization.arrayToDataTable(information2);
+
+        var options = {
+          title: 'Text Length vs. Price Comparison',
+          hAxis: {title: 'Text Length', minValue: 0, maxValue: 30},
+          vAxis: {title: 'Price', minValue: 0, maxValue: 200},
+          legend: 'none'
+        };
+
+        var chart2 = new google.visualization.ScatterChart(document.getElementById('chart2_div'));
+
+        chart2.draw(data, options);
+      }
+></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script th:text="'var w11 =' + ${w11}+ ';'"></script>
+    <script th:text="'var w12 =' + ${w12}+ ';'"></script>
+    <script th:text="'var w21 =' + ${w21}+ ';'"></script>
+    <script th:text="'var w22 =' + ${w22}+ ';'"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['table']});
+      google.charts.setOnLoadCallback(drawTable);
+
+      function drawTable() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('number', 1);
+        data.addColumn('number', 2);
+        data.addRows([
+          [{w11},  {w12}],
+          [{w21},  {w22}],
+        ]);
+
+        var table = new google.visualization.Table(document.getElementById('table_div'));
+
+        table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
+      }
+</script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script th:text="'var l11 =' + ${l11}+ ';'"></script>
+    <script th:text="'var l12 =' + ${l12}+ ';'"></script>
+    <script th:text="'var l21 =' + ${l21}+ ';'"></script>
+    <script th:text="'var l22 =' + ${l22}+ ';'"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['table']});
+      google.charts.setOnLoadCallback(drawTable);
+
+      function drawTable() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('number', 1);
+        data.addColumn('number', 2);
+        data.addRows([
+          [{l11},  {l12}],
+          [{l21},  {l22}],
+        ]);
+
+        var table2 = new google.visualization.Table(document.getElementById('table2_div'));
+
+        table2.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
+      }
+</script>
+
+</head>
+<body>
+<h1> Dauer-Preis-Vergleich </h1>
+<div id='chart_div'></div>
+<h1> Fragelänge-Preis-Vergleich </h1>
+<div id='chart2_div'></div>
+<h1> Konfusionsmatrix für Watson im Vergleich zu den Rechtsexperten </h1>
+<div id='table_div'></div>
+<p> Der Wert 1 in der Tabelle repräsentiert true, der Wert 2 false. Aus der Tabelle lässt sich also ablesen,
+wie oft das Watsonsystem mit den Rechtsexperten bezüglich true übereinstimmt - an der Stelle 1-1 - und abweicht - bei
+1-2. Gleiches gilt für die Übereinstimmung bezüglich false - 2-2 - und die Abweichung bezüglich false - 2-1.</p>
+<p> <center>Richtig: BlaBlaBla</center></p>
+<p> <center>Falsch: BlaBlaBla</center></p>
+<p> <center><b>Genauigkeit: BlaBlaBla</b></center></p>
+<h1> Konfusionsmatrix für das Expertensystem im Vergleich zu den Rechtsexperten</h1>
+<div id='table2_div'></div>
+<p> Der Wert 1 in der Tabelle repräsentiert true, der Wert 2 false. Aus der Tabelle lässt sich also ablesen,
+    wie oben ablesen wie oft hier das Expertensystem mit den Rechtsexperten bezüglich true übereinstimmt - an der Stelle 1-1 - und abweicht - bei
+    1-2. Gleiches gilt für die Übereinstimmung bezüglich false - 2-2 - und die Abweichung bezüglich false - 2-1.</p>
+<p> <center>Richtig: BlaBlaBla</center></p>
+<p> <center>Falsch: BlaBlaBla</center></p>
+<p> <center><b>Genauigkeit: BlaBlaBla</b></center></p>
+<p> <center>Problemfälle, die nicht klassifiziert werden konnten: BlaBlaBla </center></p>
+</body>
+</html>

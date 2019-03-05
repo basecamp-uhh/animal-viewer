@@ -783,7 +783,7 @@ public class SolrConnect {
         {
             Object question = FragenAusgeber(arrayList.get(i).toString());
             MieterClassifier mieterClassifier = new MieterClassifier();
-            Object value = mieterClassifier.istMieter(question.toString());
+            Object value = mieterClassifier.istHauptklasse(question.toString());
             Object value2 = mieterClassifier.classify(question.toString());
 
             ChangeValueByField(arrayList.get(i).toString(), "Expertensystem_istmieter", value);
@@ -805,7 +805,7 @@ public class SolrConnect {
             Object question = FragenAusgeber(arrayList.get(i).toString());
             WatsonMieterClassifier watsonmieterClassifier = new WatsonMieterClassifier();
             Object value = watsonmieterClassifier.classify(question.toString());
-            Object value2 = watsonmieterClassifier.istMieter(question.toString());
+            Object value2 = watsonmieterClassifier.istHauptklasse(question.toString());
 
             ChangeValueByField(arrayList.get(i).toString(), "Watson_istmieter", value2);
             ChangeValueByField(arrayList.get(i).toString(), "Watson", value);
