@@ -4,18 +4,28 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import uhh_lt.classifier.MieterClassifier;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.Scanner;
 
-@RestController
+//@RestController
+@Controller
 @EnableAutoConfiguration
 @SpringBootApplication
 public class ApplicationController  extends SpringBootServletInitializer {
 
-    private static MieterClassifier mieterClassifier= new MieterClassifier();
+    private static MieterClassifier mieterClassifier = new MieterClassifier();
     private static SolrConnect solrConnect = new SolrConnect();
 
     /**
@@ -58,8 +68,12 @@ public class ApplicationController  extends SpringBootServletInitializer {
 
     private List<String> readIdFile(String filename) {
 
-        Scanner s;
-        s = new Scanner(getClass().getClassLoader().getResourceAsStream(filename));
+        Scanner s = null;
+        try {
+            s = new Scanner(new File(filename));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
         List<String> out = new ArrayList<>();
         while (s.hasNextLine()){
             out.add(s.nextLine());
@@ -75,7 +89,7 @@ public class ApplicationController  extends SpringBootServletInitializer {
         SolrConnect sc = new SolrConnect();
         sc.MieterButtonsPushed(id, true);
         try {
-            httpResponse.sendRedirect("./");
+            httpResponse.sendRedirect("/");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -87,7 +101,7 @@ public class ApplicationController  extends SpringBootServletInitializer {
         SolrConnect sc = new SolrConnect();
         sc.MieterButtonsPushed(id, false);
         try {
-            httpResponse.sendRedirect("./");
+            httpResponse.sendRedirect("/");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -99,7 +113,79 @@ public class ApplicationController  extends SpringBootServletInitializer {
         SolrConnect sc = new SolrConnect();
         sc.MieterProblemfallButtonPushed(id);
         try {
-            httpResponse.sendRedirect("./");
+            httpResponse.sendRedirect("/");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @RequestMapping("/setGewerblich")
+    public void setGewerblich(@RequestParam(value = "id", defaultValue = "") String id,  HttpServletResponse httpResponse) {
+        System.out.println(id);
+        SolrConnect sc = new SolrConnect();
+        sc.GewerblichButtonsPushed(id, true);
+        try {
+            httpResponse.sendRedirect("./gewerblich");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @RequestMapping("/setPrivat")
+    public void setPrivat(@RequestParam(value = "id", defaultValue = "") String id,  HttpServletResponse httpResponse) {
+        System.out.println(id);
+        SolrConnect sc = new SolrConnect();
+        sc.GewerblichButtonsPushed(id, false);
+        try {
+            httpResponse.sendRedirect("./gewerblich");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @RequestMapping("/setProblemfallGewerblich")
+    public void setProblemfallGewerblich(@RequestParam(value = "id", defaultValue = "") String id,  HttpServletResponse httpResponse) {
+        System.out.println(id);
+        SolrConnect sc = new SolrConnect();
+        sc.GewerblichProblemfallButtonPushed(id);
+        try {
+            httpResponse.sendRedirect("./gewerblich");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @RequestMapping("/setWarm")
+    public void setWarm(@RequestParam(value = "id", defaultValue = "") String id,  HttpServletResponse httpResponse) {
+        System.out.println(id);
+        SolrConnect sc = new SolrConnect();
+        sc.WarmButtonsPushed(id, true);
+        try {
+            httpResponse.sendRedirect("./warm");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @RequestMapping("/setKalt")
+    public void setKalt(@RequestParam(value = "id", defaultValue = "") String id,  HttpServletResponse httpResponse) {
+        System.out.println(id);
+        SolrConnect sc = new SolrConnect();
+        sc.WarmButtonsPushed(id, false);
+        try {
+            httpResponse.sendRedirect("./warm");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @RequestMapping("/setProblemfallWarm")
+    public void setProblemfallWarm(@RequestParam(value = "id", defaultValue = "") String id,  HttpServletResponse httpResponse) {
+        System.out.println(id);
+        SolrConnect sc = new SolrConnect();
+        sc.WarmProblemfallButtonPushed(id);
+        try {
+            httpResponse.sendRedirect("./warm");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -108,31 +194,28 @@ public class ApplicationController  extends SpringBootServletInitializer {
     @RequestMapping("/")
     String home(@RequestParam(value = "", defaultValue = "") String text, @RequestParam(value = "format", defaultValue = "text") String format)
     {
-        List<String> ids = readIdFile("outputID.txt");
+        List<String> ids = readIdFile("resources/outputID.txt");
         StringBuilder sb = new StringBuilder();
 
 
 
         SolrConnect sc = new SolrConnect();
         String id = givenList_shouldReturnARandomElement(ids);
-        while (sc.isFullyAnnotatedMieter(id)) {
-            id = givenList_shouldReturnARandomElement(ids);
-        }
         String frage = sc.getFrage(id);
 
         sb.append("<html><body>");
 
-        sb.append("<form action=\"./setMieter\" method=\"get\">\n")
+        sb.append("<form action=\"/setMieter\" method=\"get\">\n")
                 .append("<textarea name=\"id\" >")
                 .append(id).append("</textarea><input type=\"submit\" value=\"Mieter\">\n" +
                 "</form>");
 
-        sb.append("<form action=\"./setVermieter\" method=\"get\">\n")
+        sb.append("<form action=\"/setVermieter\" method=\"get\">\n")
                 .append("<textarea name=\"id\" >")
                 .append(id).append("</textarea><input type=\"submit\" value=\"Vermieter\">\n" +
                 "</form>");
 
-        sb.append("<form action=\"./setProblemfall\" method=\"get\">\n")
+        sb.append("<form action=\"/setProblemfall\" method=\"get\">\n")
                 .append("<textarea name=\"id\" >")
                 .append(id).append("</textarea><input type=\"submit\" value=\"Problemfall\">\n" +
                 "</form>");
@@ -143,4 +226,182 @@ public class ApplicationController  extends SpringBootServletInitializer {
         sb.append("</pre></body></html>");
         return sb.toString();
     }
+
+    @RequestMapping("/gewerblich")
+    String home2(@RequestParam(value = "", defaultValue = "") String text, @RequestParam(value = "format", defaultValue = "text") String format)
+    {
+        List<String> ids = readIdFile("outputID.txt");
+        StringBuilder sb = new StringBuilder();
+
+        SolrConnect sc = new SolrConnect();
+        String id = givenList_shouldReturnARandomElement(ids);
+        while (sc.isFullyAnnotatedGewerblich(id)) {
+            id = givenList_shouldReturnARandomElement(ids);
+        }
+        String frage = sc.getFrage(id);
+
+        sb.append("<html><body>");
+
+        sb.append("<form action=\"./setGewerblich\" method=\"get\">\n")
+                .append("<textarea name=\"id\" >")
+                .append(id).append("</textarea><input type=\"submit\" value=\"Gewerblich\">\n" +
+                "</form>");
+
+        sb.append("<form action=\"./setPrivat\" method=\"get\">\n")
+                .append("<textarea name=\"id\" >")
+                .append(id).append("</textarea><input type=\"submit\" value=\"Privat\">\n" +
+                "</form>");
+
+        sb.append("<form action=\"./setProblemfallGewerblich\" method=\"get\">\n")
+                .append("<textarea name=\"id\" >")
+                .append(id).append("</textarea><input type=\"submit\" value=\"Problemfall\">\n" +
+                "</form>");
+
+
+        sb.append("<p<ID: ").append(id).append("</p><p>Frage:</p><pre>");
+        sb.append(frage);
+        sb.append("</pre></body></html>");
+        return sb.toString();
+    }
+
+    @RequestMapping("/warm")
+    String home3(@RequestParam(value = "", defaultValue = "") String text, @RequestParam(value = "format", defaultValue = "text") String format)
+    {
+        List<String> ids = readIdFile("outputID.txt");
+        StringBuilder sb = new StringBuilder();
+
+        SolrConnect sc = new SolrConnect();
+        String id = givenList_shouldReturnARandomElement(ids);
+        while (sc.isFullyAnnotatedWarm(id)) {
+            id = givenList_shouldReturnARandomElement(ids);
+        }
+        String frage = sc.getFrage(id);
+
+        sb.append("<html><body>");
+
+        sb.append("<form action=\"./setWarm\" method=\"get\">\n")
+                .append("<textarea name=\"id\" >")
+                .append(id).append("</textarea><input type=\"submit\" value=\"Warm\">\n" +
+                "</form>");
+
+        sb.append("<form action=\"./setKalt\" method=\"get\">\n")
+                .append("<textarea name=\"id\" >")
+                .append(id).append("</textarea><input type=\"submit\" value=\"Kalt\">\n" +
+                "</form>");
+
+        sb.append("<form action=\"./setProblemfallWarm\" method=\"get\">\n")
+                .append("<textarea name=\"id\" >")
+                .append(id).append("</textarea><input type=\"submit\" value=\"Problemfall\">\n" +
+                "</form>");
+
+
+        sb.append("<p<ID: ").append(id).append("</p><p>Frage:</p><pre>");
+        sb.append(frage);
+        sb.append("</pre></body></html>");
+        return sb.toString();
+    }
+
+    @RequestMapping("/hello")
+    String stats()
+    {
+        StringBuilder sb = new StringBuilder();
+        SolrConnect sc = new SolrConnect();
+
+        sb.append("<html><head>");
+
+        sb.append("<script type=\"text/javascript\" src=\"https://www.gstatic.com/charts/loader.js\"></script>\n");
+
+
+        sb.append("<script type=\"text/javascript\">" +
+                        "google.charts.load('current', {packages: ['corechart', 'line']});\n" +
+                        "google.charts.setOnLoadCallback(drawCurveTypes);\n" +
+                        "\n" +
+                        "function drawCurveTypes() {\n" +
+                        "      var data = new google.visualization.DataTable();\n" +
+                        "      data.addColumn('number', 'time');\n" +
+                        "      data.addColumn('number', 'price');\n" +
+                        "\n" +
+                        "      data.addRows([\n"
+        ).append(sc.DauerPreisComparer()).append("\n" +
+                        "      ]);\n" +
+                        "\n" +
+                        "      var options = {\n" +
+                        "        hAxis: {\n" +
+                        "          title: 'Time'\n" +
+                        "        },\n" +
+                        "        vAxis: {\n" +
+                        "          title: 'Price'\n" +
+                        "        },\n" +
+                        "        series: {\n" +
+                        "          1: {curveType: 'function'}\n" +
+                        "        }\n" +
+                        "      };\n" +
+                        "\n" +
+                        "      var chart = new google.visualization.LineChart(document.getElementById('chart_div'));\n" +
+                        "      chart.draw(data, options);\n" +
+                        "    }" +
+                "</script></head><body>\"  <div id='chart_div'></div>\");\n");
+
+        sb.append("<h2> Vergleich Watson mit </h2>); \n");
+
+        /**sb.append("<script type=\"text/javascript\">" +
+            "google.charts.load('current', {'packages':['table']});\n" +
+            "google.charts.setOnLoadCallback(drawTable);\n" +
+
+            "function drawTable() {\n" +
+            "var data = new google.visualization.DataTable();\n" +
+            "data.addColumn('number', '1');\n" +
+            "data.addColumn('number', '2');\n" +
+            "data.addRows([\n" +
+            "[sc.getWatson11();,  sc.getWatson12();],\n" +
+            "[sc.getWatson21();,  sc.getWatson22();],\n" +
+            "]);\n" +
+
+            "var table = new google.visualization.Table(document.getElementById('table_div'));\n" +
+
+            "table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});\n"+
+            "}\n" +
+            "</script>  );
+
+        sb.append("<h1> Dauer-Längen-Vergleich</h1>; \n");
+        sb.append("<div id=table_div></div>\");\n");
+*/
+        sb.append("</body></html>");
+        return sb.toString();
+    }
+
+
+    @RequestMapping("/stats")
+    public String mainWithParam(
+            @RequestParam(name = "name", required = false, defaultValue = "")
+                    String name, Model model) {
+        SolrConnect sc = new SolrConnect();
+        model.addAttribute("message", sc.DauerPreisComparer());
+
+        return "charts"; //view
+    }
+
+    @RequestMapping("/table")
+    public String mainy(
+            @RequestParam(name = "name", required = false, defaultValue = "")
+                    String name, Model model) {
+        SolrConnect sc = new SolrConnect();
+        model.addAttribute("w11", sc.getWatson11());
+        model.addAttribute("w12", sc.getWatson12());
+        model.addAttribute("w21", sc.getWatson21());
+        model.addAttribute("w22", sc.getWatson22());
+
+
+        return "table"; //view
+    }
+
+
+    @RequestMapping("/test")
+    public String main(Model model) {
+        model.addAttribute("message", "asdf");
+        model.addAttribute("tasks", "quert");
+
+        return "welcome"; //view
+    }
+
 }
