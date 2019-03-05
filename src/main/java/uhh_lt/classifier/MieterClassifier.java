@@ -188,11 +188,7 @@ public class MieterClassifier implements ClassifierInterface
     }
 
 
-    /**
-     * Wenn es sich um einen Mieter handelt wird 1 ausgegeben.
-     * @param text Ein String
-     * @return true wenn Mieter, false wenn Vermieter
-     */
+    @Override
     public Object istMieter(String text) {
         double p = classify(text);
 
