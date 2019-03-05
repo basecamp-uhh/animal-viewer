@@ -1,6 +1,5 @@
 package uhh_lt.webserver;
 
-import org.apache.http.util.Args;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import weka.classifiers.functions.LinearRegression;
@@ -32,6 +31,7 @@ public class GetRecommendedPrice {
         for (String id:ids) {
             String frage = connect.getFrage(id);
             int wortAnzahl = GetComplexity.countWord(frage);
+/**
             int nounCount = GetComplexity.complexNounCount(frage);
             String price = connect.getPreis(id);
 
@@ -42,6 +42,7 @@ public class GetRecommendedPrice {
 
             writer.write(sb.toString());
             writer.write("\n");
+ **/
         }
         writer.close();
     }

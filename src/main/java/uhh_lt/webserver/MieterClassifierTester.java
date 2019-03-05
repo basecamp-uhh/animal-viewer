@@ -1,5 +1,7 @@
 package uhh_lt.webserver;
 
+import uhh_lt.classifier.MieterClassifier;
+
 public class MieterClassifierTester
 {
     public static void nain(String[] args)
