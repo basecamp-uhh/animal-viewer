@@ -50,7 +50,7 @@ public class SolrConnect {
         inputDocument.addField("Expertensystem_istmieter", mc.istMieter((String)object.get("T_Message")));
         inputDocument.addField("Expertensystem_wert", mc.getMieterwahrscheinlichkeit());
         inputDocument.addField("Watson", wmc.classify((String)object.get("T_Message")));
-        inputDocument.addField( "Watson istmieter", wmc.istMieter());
+        inputDocument.addField( "Watson istmieter", wmc.istMieterWarnGewerblich());
         inputDocument.addField("t_length", wordCount.countWord((String)object.get("T_Message")));
 
         try {
@@ -185,6 +185,24 @@ public class SolrConnect {
 
         SolrDocumentList results = response.getResults();
         return String.valueOf(results.get(0).get("t_message"));
+    }
+
+    public Double getPreis(String id) {
+        SolrQuery query = new SolrQuery();
+        query.setQuery("id:" + id).setFields("t_price").setStart(0).setRows(10000);
+
+        QueryResponse response = null;
+
+        try {
+            response = client.query(query);
+        } catch (SolrServerException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        SolrDocumentList results = response.getResults();
+        return Double.valueOf((Double) results.get(0).get("t_price"));
     }
 
     public void IdSearch() throws IOException {
