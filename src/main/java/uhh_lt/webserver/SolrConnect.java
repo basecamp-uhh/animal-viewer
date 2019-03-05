@@ -47,10 +47,10 @@ public class SolrConnect {
         inputDocument.addField("a_date", object.get("R_posted"));
         inputDocument.addField("a_message", object.get("R_Message"));
         inputDocument.addField("t_time", DatenDifferenz.Differenz((String)object.get("T_Date"),(String)object.get("R_posted")));
-        inputDocument.addField("Expertensystem_istmieter", mc.istMieter((String)object.get("T_Message")));
+        inputDocument.addField("Expertensystem_istmieter", mc.istHauptklasse((String)object.get("T_Message")));
         inputDocument.addField("Expertensystem_wert", mc.getMieterwahrscheinlichkeit());
         inputDocument.addField("Watson", wmc.classify((String)object.get("T_Message")));
-        inputDocument.addField( "Watson istmieter", wmc.istMieterWarnGewerblich());
+        inputDocument.addField( "Watson istmieter", wmc.istHauptklasse());
         inputDocument.addField("t_length", GetComplexity.countWord((String)object.get("T_Message")));
 
         try {
