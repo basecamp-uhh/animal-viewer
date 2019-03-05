@@ -51,7 +51,7 @@ public class SolrConnect {
         inputDocument.addField("Expertensystem_wert", mc.getMieterwahrscheinlichkeit());
         inputDocument.addField("Watson", wmc.classify((String)object.get("T_Message")));
         inputDocument.addField( "Watson istmieter", wmc.istMieterWarnGewerblich());
-        inputDocument.addField("t_length", wordCount.countWord((String)object.get("T_Message")));
+        inputDocument.addField("t_length", GetComplexity.countWord((String)object.get("T_Message")));
 
         try {
             client.add(inputDocument);
