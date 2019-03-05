@@ -1,5 +1,6 @@
 # ba-service-backend
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/931df9feb1ef41a69eac5569fd13d675)](https://app.codacy.com/app/6hauptvo/ba-service-backend?utm_source=github.com&utm_medium=referral&utm_content=6hauptvo/ba-service-backend&utm_campaign=Badge_Grade_Settings)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/54ca2b461fcb48eebed8a0a6ca4cb4b1)](https://app.codacy.com/app/eugenso/ba-service-backend?utm_source=github.com&utm_medium=referral&utm_content=6hauptvo/ba-service-backend&utm_campaign=Badge_Grade_Dashboard)
 
 This project contains a web service based on the Spring Boot framework.
