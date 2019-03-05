@@ -8,7 +8,7 @@ public interface ClassifierInterface
      * Gibt "true" zurück, wenn es sich um einen Mieter handelt, sonst "false"
      * @return true wenn Mieter, false wenn Vermieter
      */
-    boolean istMieterWarnGewerblich();
+    boolean istHauptklasse();
 
     /**
      * Wenn es sich mit einer Wahrscheinlichkeit von über 50% um einen Mieter handelt wird "true" ausgegeben, bei unter
@@ -16,5 +16,5 @@ public interface ClassifierInterface
      * @param text Ein String
      * @return true wenn Mieter, false wenn Vermieter
      */
-    Object istMieterWarnGewerblich(String text);
+    Object istHauptklasse(String text);
 }

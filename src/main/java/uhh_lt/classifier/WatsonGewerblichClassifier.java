@@ -42,7 +42,7 @@ public class WatsonGewerblichClassifier implements ClassifierInterface {
 
 
     @Override
-    public boolean istMieterWarnGewerblich()
+    public boolean istHauptklasse()
     {
         if(classification.getTopClass().compareTo("Mieter") == 0)
         {
@@ -52,7 +52,7 @@ public class WatsonGewerblichClassifier implements ClassifierInterface {
     }
 
     @Override
-    public Object istMieterWarnGewerblich(String text) {
+    public Object istHauptklasse(String text) {
         if(classification.getTopClass().compareTo("Mieter") == 0)
         {
             return true;
