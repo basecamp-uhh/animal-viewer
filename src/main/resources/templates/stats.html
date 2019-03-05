@@ -3,12 +3,12 @@
 <head>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script th:text="'var information =[' + ${message}+ '];'"></script>
+    <script th:text=" 'var information2 =[' + ${message1}+ '];'"></script>
     <script type="text/javascript">google.charts.load('current', {'packages':['corechart']});
       google.charts.setOnLoadCallback(drawChart);
 
 function drawChart() {
         information.unshift(['Length of Time','Price']);
-        console.log(information);
         var data = google.visualization.arrayToDataTable(information);
 
         var options = {
@@ -21,19 +21,12 @@ function drawChart() {
         var chart = new google.visualization.ScatterChart(document.getElementById('chart_div'));
 
         chart.draw(data, options);
-      }
-</script>
-    <script th:text=" 'var information2 =[' + ${message1}+ '];'"
-></script>
-    <script type="text/javascript">google.charts.load('current', {'packages':['corechart']});
-      google.charts.setOnLoadCallback(drawChart);
 
-function drawChart() {
-        information.unshift(['Text Length','Price']);
-        console.log(information2);
-        var data = google.visualization.arrayToDataTable(information2);
 
-        var options = {
+        information2.unshift(['Text Length','Price']);
+        var data2 = google.visualization.arrayToDataTable(information2);
+
+        var options2 = {
           title: 'Text Length vs. Price Comparison',
           hAxis: {title: 'Text Length', minValue: 0, maxValue: 30},
           vAxis: {title: 'Price', minValue: 0, maxValue: 200},
@@ -42,10 +35,11 @@ function drawChart() {
 
         var chart2 = new google.visualization.ScatterChart(document.getElementById('chart2_div'));
 
-        chart2.draw(data, options);
+        chart2.draw(data2, options2);
       }
-></script>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+</script>
+
+
     <script th:text="'var w11 =' + ${w11}+ ';'"></script>
     <script th:text="'var w12 =' + ${w12}+ ';'"></script>
     <script th:text="'var w21 =' + ${w21}+ ';'"></script>
@@ -59,8 +53,8 @@ function drawChart() {
         data.addColumn('number', 1);
         data.addColumn('number', 2);
         data.addRows([
-          [{w11},  {w12}],
-          [{w21},  {w22}],
+          [w11,  w12],
+          [w21,  w22],
         ]);
 
         var table = new google.visualization.Table(document.getElementById('table_div'));
@@ -68,7 +62,6 @@ function drawChart() {
         table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
       }
 </script>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script th:text="'var l11 =' + ${l11}+ ';'"></script>
     <script th:text="'var l12 =' + ${l12}+ ';'"></script>
     <script th:text="'var l21 =' + ${l21}+ ';'"></script>
@@ -82,8 +75,8 @@ function drawChart() {
         data.addColumn('number', 1);
         data.addColumn('number', 2);
         data.addRows([
-          [{l11},  {l12}],
-          [{l21},  {l22}],
+          [l11,  l12],
+          [l21,  l22],
         ]);
 
         var table2 = new google.visualization.Table(document.getElementById('table2_div'));
@@ -94,7 +87,8 @@ function drawChart() {
 
 </head>
 <body>
-<h1> Dauer-Preis-Vergleich </h1>
+<h1> Dauer-Preis-Vergleich <span th:text="'Der wert ust ' + ${l11}"></span> </h1>
+
 <div id='chart_div'></div>
 <h1> Fragelänge-Preis-Vergleich </h1>
 <div id='chart2_div'></div>

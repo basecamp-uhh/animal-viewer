@@ -1,9 +1,4 @@
 package uhh_lt.webserver;
-import org.json.simple.JSONObject;
-
-import java.io.IOException;
-import java.text.ParseException;
-
 public class wordCount {
 
     public static void main(String[] args) {

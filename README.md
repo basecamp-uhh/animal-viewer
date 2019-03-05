@@ -1,6 +1,5 @@
 # ba-service-backend
-
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/54ca2b461fcb48eebed8a0a6ca4cb4b1)](https://app.codacy.com/app/eugenso/ba-service-backend?utm_source=github.com&utm_medium=referral&utm_content=6hauptvo/ba-service-backend&utm_campaign=Badge_Grade_Dashboard)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/cdd08acab3044766b0d89200af331169)](https://www.codacy.com/app/6hauptvo/ba-service-backend?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=6hauptvo/ba-service-backend&amp;utm_campaign=Badge_Grade)
 
 This project contains a web service based on the Spring Boot framework.
 It features a RESTful endpoint that can retrieve word expansions.

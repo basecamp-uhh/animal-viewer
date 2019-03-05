@@ -43,7 +43,6 @@ public class ApplicationController  extends SpringBootServletInitializer {
     {
 
         text = text.replace("\r", " ").replace("\n", " ").trim();
-        format = format.replace("\r", " ").replace("\n", " ").trim();
 
         mieterClassifier.classify(text);
 
@@ -55,15 +54,13 @@ public class ApplicationController  extends SpringBootServletInitializer {
     {
 
         text = text.replace("\r", " ").replace("\n", " ").trim();
-        format = format.replace("\r", " ").replace("\n", " ").trim();
 
         return solrConnect.search(text);
     }
 
-    public String givenList_shouldReturnARandomElement(List<String> list) {
+    private String givenList_shouldReturnARandomElement(List<String> list) {
         Random rand = new Random();
-        String randomElement = list.get(rand.nextInt(list.size()));
-        return randomElement;
+        return list.get(rand.nextInt(list.size()));
     }
 
     private List<String> readIdFile(String filename) {
@@ -192,7 +189,7 @@ public class ApplicationController  extends SpringBootServletInitializer {
     }
 
     @RequestMapping("/")
-    String home(@RequestParam(value = "", defaultValue = "") String text, @RequestParam(value = "format", defaultValue = "text") String format)
+    String home()
     {
         List<String> ids = readIdFile("resources/outputID.txt");
         StringBuilder sb = new StringBuilder();
@@ -228,7 +225,7 @@ public class ApplicationController  extends SpringBootServletInitializer {
     }
 
     @RequestMapping("/gewerblich")
-    String home2(@RequestParam(value = "", defaultValue = "") String text, @RequestParam(value = "format", defaultValue = "text") String format)
+    String home2()
     {
         List<String> ids = readIdFile("outputID.txt");
         StringBuilder sb = new StringBuilder();
@@ -265,7 +262,7 @@ public class ApplicationController  extends SpringBootServletInitializer {
     }
 
     @RequestMapping("/warm")
-    String home3(@RequestParam(value = "", defaultValue = "") String text, @RequestParam(value = "format", defaultValue = "text") String format)
+    String home3()
     {
         List<String> ids = readIdFile("outputID.txt");
         StringBuilder sb = new StringBuilder();
@@ -304,45 +301,8 @@ public class ApplicationController  extends SpringBootServletInitializer {
     @RequestMapping("/hello")
     String stats()
     {
-        StringBuilder sb = new StringBuilder();
         SolrConnect sc = new SolrConnect();
 
-        sb.append("<html><head>");
-
-        sb.append("<script type=\"text/javascript\" src=\"https://www.gstatic.com/charts/loader.js\"></script>\n");
-
-
-        sb.append("<script type=\"text/javascript\">" +
-                        "google.charts.load('current', {packages: ['corechart', 'line']});\n" +
-                        "google.charts.setOnLoadCallback(drawCurveTypes);\n" +
-                        "\n" +
-                        "function drawCurveTypes() {\n" +
-                        "      var data = new google.visualization.DataTable();\n" +
-                        "      data.addColumn('number', 'time');\n" +
-                        "      data.addColumn('number', 'price');\n" +
-                        "\n" +
-                        "      data.addRows([\n"
-        ).append(sc.DauerPreisComparer()).append("\n" +
-                        "      ]);\n" +
-                        "\n" +
-                        "      var options = {\n" +
-                        "        hAxis: {\n" +
-                        "          title: 'Time'\n" +
-                        "        },\n" +
-                        "        vAxis: {\n" +
-                        "          title: 'Price'\n" +
-                        "        },\n" +
-                        "        series: {\n" +
-                        "          1: {curveType: 'function'}\n" +
-                        "        }\n" +
-                        "      };\n" +
-                        "\n" +
-                        "      var chart = new google.visualization.LineChart(document.getElementById('chart_div'));\n" +
-                        "      chart.draw(data, options);\n" +
-                        "    }" +
-                "</script></head><body>\"  <div id='chart_div'></div>\");\n");
-
-        sb.append("<h2> Vergleich Watson mit </h2>); \n");
 
         /**sb.append("<script type=\"text/javascript\">" +
             "google.charts.load('current', {'packages':['table']});\n" +
@@ -366,14 +326,44 @@ public class ApplicationController  extends SpringBootServletInitializer {
         sb.append("<h1> Dauer-Längen-Vergleich</h1>; \n");
         sb.append("<div id=table_div></div>\");\n");
 */
-        sb.append("</body></html>");
-        return sb.toString();
+        String sb = "<html><head>" +
+                "<script type=\"text/javascript\" src=\"https://www.gstatic.com/charts/loader.js\"></script>\n" +
+                "<script type=\"text/javascript\">" +
+                "google.charts.load('current', {packages: ['corechart', 'line']});\n" +
+                "google.charts.setOnLoadCallback(drawCurveTypes);\n" +
+                "\n" +
+                "function drawCurveTypes() {\n" +
+                "      var data = new google.visualization.DataTable();\n" +
+                "      data.addColumn('number', 'time');\n" +
+                "      data.addColumn('number', 'price');\n" +
+                "\n" +
+                "      data.addRows([\n" +
+                sc.DauerPreisComparer() + "\n" +
+                "      ]);\n" +
+                "\n" +
+                "      var options = {\n" +
+                "        hAxis: {\n" +
+                "          title: 'Time'\n" +
+                "        },\n" +
+                "        vAxis: {\n" +
+                "          title: 'Price'\n" +
+                "        },\n" +
+                "        series: {\n" +
+                "          1: {curveType: 'function'}\n" +
+                "        }\n" +
+                "      };\n" +
+                "\n" +
+                "      var chart = new google.visualization.LineChart(document.getElementById('chart_div'));\n" +
+                "      chart.draw(data, options);\n" +
+                "    }" +
+                "</script></head><body>\"  <div id='chart_div'></div>\");\n" +
+                "<h2> Vergleich Watson mit </h2>); \n" +
+                "</body></html>";
+        return sb;
     }
 
     @RequestMapping("/stats")
-    public String staty(
-            @RequestParam(name = "name", required = false, defaultValue = "")
-                    String name, Model model) {
+    public String staty(Model model) {
         SolrConnect sc = new SolrConnect();
         model.addAttribute("message", sc.DauerPreisComparer());
         model.addAttribute("message1", sc.FragelängePreisComparer());
@@ -391,9 +381,7 @@ public class ApplicationController  extends SpringBootServletInitializer {
 
 
     @RequestMapping("/charts")
-    public String mainWithParam(
-            @RequestParam(name = "name", required = false, defaultValue = "")
-                    String name, Model model) {
+    public String mainWithParam( Model model) {
         SolrConnect sc = new SolrConnect();
         model.addAttribute("message", sc.DauerPreisComparer());
 
@@ -401,9 +389,7 @@ public class ApplicationController  extends SpringBootServletInitializer {
     }
 
     @RequestMapping("/table")
-    public String mainy(
-            @RequestParam(name = "name", required = false, defaultValue = "")
-                    String name, Model model) {
+    public String mainy (Model model) {
         SolrConnect sc = new SolrConnect();
         model.addAttribute("w11", sc.getWatson11());
         model.addAttribute("w12", sc.getWatson12());
