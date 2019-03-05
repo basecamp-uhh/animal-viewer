@@ -119,6 +119,78 @@ public class ApplicationController  extends SpringBootServletInitializer {
         }
     }
 
+    @RequestMapping("/setGewerblich")
+    public void setGewerblich(@RequestParam(value = "id", defaultValue = "") String id,  HttpServletResponse httpResponse) {
+        System.out.println(id);
+        SolrConnect sc = new SolrConnect();
+        sc.GewerblichButtonsPushed(id, true);
+        try {
+            httpResponse.sendRedirect("./gewerblich");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @RequestMapping("/setPrivat")
+    public void setPrivat(@RequestParam(value = "id", defaultValue = "") String id,  HttpServletResponse httpResponse) {
+        System.out.println(id);
+        SolrConnect sc = new SolrConnect();
+        sc.GewerblichButtonsPushed(id, false);
+        try {
+            httpResponse.sendRedirect("./gewerblich");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @RequestMapping("/setProblemfallGewerblich")
+    public void setProblemfallGewerblich(@RequestParam(value = "id", defaultValue = "") String id,  HttpServletResponse httpResponse) {
+        System.out.println(id);
+        SolrConnect sc = new SolrConnect();
+        sc.GewerblichProblemfallButtonPushed(id);
+        try {
+            httpResponse.sendRedirect("./gewerblich");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @RequestMapping("/setWarm")
+    public void setWarm(@RequestParam(value = "id", defaultValue = "") String id,  HttpServletResponse httpResponse) {
+        System.out.println(id);
+        SolrConnect sc = new SolrConnect();
+        sc.WarmButtonsPushed(id, true);
+        try {
+            httpResponse.sendRedirect("./warm");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @RequestMapping("/setKalt")
+    public void setKalt(@RequestParam(value = "id", defaultValue = "") String id,  HttpServletResponse httpResponse) {
+        System.out.println(id);
+        SolrConnect sc = new SolrConnect();
+        sc.WarmButtonsPushed(id, false);
+        try {
+            httpResponse.sendRedirect("./warm");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @RequestMapping("/setProblemfallWarm")
+    public void setProblemfallWarm(@RequestParam(value = "id", defaultValue = "") String id,  HttpServletResponse httpResponse) {
+        System.out.println(id);
+        SolrConnect sc = new SolrConnect();
+        sc.WarmProblemfallButtonPushed(id);
+        try {
+            httpResponse.sendRedirect("./warm");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     @RequestMapping("/")
     String home(@RequestParam(value = "", defaultValue = "") String text, @RequestParam(value = "format", defaultValue = "text") String format)
     {
@@ -150,6 +222,80 @@ public class ApplicationController  extends SpringBootServletInitializer {
 
 
                 sb.append("<p<ID: ").append(id).append("</p><p>Frage:</p><pre>");
+        sb.append(frage);
+        sb.append("</pre></body></html>");
+        return sb.toString();
+    }
+
+    @RequestMapping("/gewerblich")
+    String home2(@RequestParam(value = "", defaultValue = "") String text, @RequestParam(value = "format", defaultValue = "text") String format)
+    {
+        List<String> ids = readIdFile("outputID.txt");
+        StringBuilder sb = new StringBuilder();
+
+        SolrConnect sc = new SolrConnect();
+        String id = givenList_shouldReturnARandomElement(ids);
+        while (sc.isFullyAnnotatedGewerblich(id)) {
+            id = givenList_shouldReturnARandomElement(ids);
+        }
+        String frage = sc.getFrage(id);
+
+        sb.append("<html><body>");
+
+        sb.append("<form action=\"./setGewerblich\" method=\"get\">\n")
+                .append("<textarea name=\"id\" >")
+                .append(id).append("</textarea><input type=\"submit\" value=\"Gewerblich\">\n" +
+                "</form>");
+
+        sb.append("<form action=\"./setPrivat\" method=\"get\">\n")
+                .append("<textarea name=\"id\" >")
+                .append(id).append("</textarea><input type=\"submit\" value=\"Privat\">\n" +
+                "</form>");
+
+        sb.append("<form action=\"./setProblemfallGewerblich\" method=\"get\">\n")
+                .append("<textarea name=\"id\" >")
+                .append(id).append("</textarea><input type=\"submit\" value=\"Problemfall\">\n" +
+                "</form>");
+
+
+        sb.append("<p<ID: ").append(id).append("</p><p>Frage:</p><pre>");
+        sb.append(frage);
+        sb.append("</pre></body></html>");
+        return sb.toString();
+    }
+
+    @RequestMapping("/warm")
+    String home3(@RequestParam(value = "", defaultValue = "") String text, @RequestParam(value = "format", defaultValue = "text") String format)
+    {
+        List<String> ids = readIdFile("outputID.txt");
+        StringBuilder sb = new StringBuilder();
+
+        SolrConnect sc = new SolrConnect();
+        String id = givenList_shouldReturnARandomElement(ids);
+        while (sc.isFullyAnnotatedWarm(id)) {
+            id = givenList_shouldReturnARandomElement(ids);
+        }
+        String frage = sc.getFrage(id);
+
+        sb.append("<html><body>");
+
+        sb.append("<form action=\"./setWarm\" method=\"get\">\n")
+                .append("<textarea name=\"id\" >")
+                .append(id).append("</textarea><input type=\"submit\" value=\"Warm\">\n" +
+                "</form>");
+
+        sb.append("<form action=\"./setKalt\" method=\"get\">\n")
+                .append("<textarea name=\"id\" >")
+                .append(id).append("</textarea><input type=\"submit\" value=\"Kalt\">\n" +
+                "</form>");
+
+        sb.append("<form action=\"./setProblemfallWarm\" method=\"get\">\n")
+                .append("<textarea name=\"id\" >")
+                .append(id).append("</textarea><input type=\"submit\" value=\"Problemfall\">\n" +
+                "</form>");
+
+
+        sb.append("<p<ID: ").append(id).append("</p><p>Frage:</p><pre>");
         sb.append(frage);
         sb.append("</pre></body></html>");
         return sb.toString();

@@ -1,4 +1,4 @@
-package uhh_lt.classifier;
+package uhh_lt.webserver;
 
 public class WatsonMieterClassifierTester
 {

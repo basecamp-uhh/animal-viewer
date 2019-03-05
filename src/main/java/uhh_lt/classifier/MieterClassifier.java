@@ -103,7 +103,7 @@ public class MieterClassifier implements ClassifierInterface
     }
 
     @Override
-    public boolean istMieter() {
+    public boolean istHauptklasse() {
         if (mieterWahrscheinlichkeit > 0.5) {
             return true;
         } else if (mieterWahrscheinlichkeit < 0.5) {
@@ -181,7 +181,7 @@ public class MieterClassifier implements ClassifierInterface
 
 
     @Override
-    public Object istMieter(String text) {
+    public Object istHauptklasse(String text) {
         double p = classify(text);
 
         if (p > 0.5) {

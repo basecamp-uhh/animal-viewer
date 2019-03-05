@@ -1,13 +1,17 @@
 package uhh_lt.webserver;
+import org.json.simple.JSONObject;
 
 //import org.json.*;
+import uhh_lt.webserver.SolrConnect;
+
+import java.io.IOException;
 
 public class SolrConnectTester {
 
     public static void main(String[] args)
     {
         SolrConnect connect = new SolrConnect();
-        connect.getWatson11();
+        connect.getWatson22();
 
         /**
         SolrConnect connect = new SolrConnect();

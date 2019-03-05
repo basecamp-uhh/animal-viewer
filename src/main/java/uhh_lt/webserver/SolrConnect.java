@@ -49,11 +49,11 @@ public class SolrConnect {
         inputDocument.addField("a_date", object.get("R_posted"));
         inputDocument.addField("a_message", object.get("R_Message"));
         inputDocument.addField("t_time", DatenDifferenz.Differenz((String)object.get("T_Date"),(String)object.get("R_posted")));
-        inputDocument.addField("Expertensystem_istmieter", mc.istMieter((String)object.get("T_Message")));
+        inputDocument.addField("Expertensystem_istmieter", mc.istHauptklasse((String)object.get("T_Message")));
         inputDocument.addField("Expertensystem_wert", mc.getMieterwahrscheinlichkeit());
         inputDocument.addField("Watson", wmc.classify((String)object.get("T_Message")));
-        inputDocument.addField( "Watson istmieter", wmc.istMieter());
-        inputDocument.addField("t_length", wordCount.countWord((String)object.get("T_Message")));
+        inputDocument.addField( "Watson istmieter", wmc.istHauptklasse());
+        inputDocument.addField("t_length", GetComplexity.countWord((String)object.get("T_Message")));
 
         try {
             client.add(inputDocument);
@@ -104,6 +104,73 @@ public class SolrConnect {
         return out.toString();
     }
 
+    public boolean isFullyAnnotatedMieter(String id){
+        SolrQuery query = new SolrQuery();
+        query.setQuery("id:" + id + "AND Rechtsexperten_istmieter2:*");
+        QueryResponse response = null;
+
+        try {
+            response = client.query(query);
+        } catch (SolrServerException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (response.getResults().size()>0) {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean isFullyAnnotatedGewerblich(String id){
+        SolrQuery query = new SolrQuery();
+        query.setQuery("id:" + id + "AND Rechtsexperten_istgewerblich2:*");
+        QueryResponse response = null;
+
+        try {
+            response = client.query(query);
+        } catch (SolrServerException e) {
+            e.printStackTrace();
+        } catch (HttpSolrClient.RemoteSolrException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (response == null) {
+            return false;
+        }
+        if (response.getResults().size()>0) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isFullyAnnotatedWarm(String id){
+        SolrQuery query = new SolrQuery();
+        query.setQuery("id:" + id + "AND Rechtsexperten_istwarm2:*");
+        QueryResponse response = null;
+
+        try {
+            response = client.query(query);
+        } catch (SolrServerException e) {
+            e.printStackTrace();
+        } catch (HttpSolrClient.RemoteSolrException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (response == null) {
+            return false;
+        }
+        if (response.getResults().size()>0) {
+            return true;
+        }
+        return false;
+    }
+
     public String getFrage(String id) {
     SolrQuery query = new SolrQuery();
     query.setQuery("id:" + id).setFields("t_message").setStart(0).setRows(10000);
@@ -120,6 +187,24 @@ public class SolrConnect {
 
         SolrDocumentList results = response.getResults();
         return String.valueOf(results.get(0).get("t_message"));
+    }
+
+    public Double getPreis(String id) {
+        SolrQuery query = new SolrQuery();
+        query.setQuery("id:" + id).setFields("t_price").setStart(0).setRows(10000);
+
+        QueryResponse response = null;
+
+        try {
+            response = client.query(query);
+        } catch (SolrServerException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        SolrDocumentList results = response.getResults();
+        return Double.valueOf((Double) results.get(0).get("t_price"));
     }
 
     public void IdSearch() throws IOException {
@@ -244,6 +329,209 @@ public class SolrConnect {
         }
     }
 
+    public void GewerblichButtonsPushed(String docID, boolean istGewerblich)
+    {
+        SolrQuery query = new SolrQuery();
+        query.set("q", "id:"+ docID);
+        QueryResponse response = null;
+        try {
+            response = client.query(query);
+        } catch (SolrServerException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        SolrDocumentList docList = response.getResults();
+        assertEquals(docList.getNumFound(), 1);
+
+        for (SolrDocument doc : docList)
+        {
+            assertEquals((String) doc.getFieldValue("id"), docID);
+        }
+
+        SolrDocument oldDoc = response.getResults().get(0);
+
+        Collection<String> feldnamensliste = oldDoc.getFieldNames();
+        ArrayList<String> list = new ArrayList<String>();
+
+        for (String str:feldnamensliste)
+        {
+            list.add(str);
+        }
+
+        String feld = "Rechtsexperten_istgewerblich";
+        String feld2 = "Rechtsexperten_istgewerblich2";
+
+        if(!list.contains(feld))
+        {
+            addRechtsexpertenfeldGewerblich(docID, istGewerblich);
+        }
+
+        else if(list.contains(feld))
+        {
+            if(!list.contains(feld2))
+            {
+                addRechtsexpertenfeldGewerblich2(docID, istGewerblich);
+            }
+
+            else
+            {
+
+            }
+        }
+
+        else if(list.contains(feld2))
+        {
+
+        }
+    }
+
+    public void GewerblichProblemfallButtonPushed(String docID)
+    {
+        SolrQuery query = new SolrQuery();
+        query.set("q", "id:"+ docID);
+        QueryResponse response = null;
+        try {
+            response = client.query(query);
+        } catch (SolrServerException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        SolrDocumentList docList = response.getResults();
+        assertEquals(docList.getNumFound(), 1);
+
+        for (SolrDocument doc : docList)
+        {
+            assertEquals((String) doc.getFieldValue("id"), docID);
+        }
+
+        SolrDocument oldDoc = response.getResults().get(0);
+
+        Collection<String> feldnamensliste = oldDoc.getFieldNames();
+        ArrayList<String> list = new ArrayList<String>();
+
+        for (String str:feldnamensliste)
+        {
+            list.add(str);
+        }
+
+        String feld = "Problemfall_Gewerblich";
+
+        if(!list.contains(feld))
+        {
+            addField(docID, "Problemfall_Gewerblich", true);
+        }
+
+        else
+        {
+
+        }
+    }
+
+    public void WarmButtonsPushed(String docID, boolean istWarm)
+    {
+        SolrQuery query = new SolrQuery();
+        query.set("q", "id:"+ docID);
+        QueryResponse response = null;
+        try {
+            response = client.query(query);
+        } catch (SolrServerException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        SolrDocumentList docList = response.getResults();
+        assertEquals(docList.getNumFound(), 1);
+
+        for (SolrDocument doc : docList)
+        {
+            assertEquals((String) doc.getFieldValue("id"), docID);
+        }
+
+        SolrDocument oldDoc = response.getResults().get(0);
+
+        Collection<String> feldnamensliste = oldDoc.getFieldNames();
+        ArrayList<String> list = new ArrayList<String>();
+
+        for (String str:feldnamensliste)
+        {
+            list.add(str);
+        }
+
+        String feld = "Rechtsexperten_istwarm";
+        String feld2 = "Rechtsexperten_istwarm2";
+
+        if(!list.contains(feld))
+        {
+            addRechtsexpertenfeldWarm(docID, istWarm);
+        }
+
+        else if(list.contains(feld))
+        {
+            if(!list.contains(feld2))
+            {
+                addRechtsexpertenfeldWarm2(docID, istWarm);
+            }
+
+            else
+            {
+
+            }
+        }
+
+        else if(list.contains(feld2))
+        {
+
+        }
+    }
+
+    public void WarmProblemfallButtonPushed(String docID)
+    {
+        SolrQuery query = new SolrQuery();
+        query.set("q", "id:"+ docID);
+        QueryResponse response = null;
+        try {
+            response = client.query(query);
+        } catch (SolrServerException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        SolrDocumentList docList = response.getResults();
+        assertEquals(docList.getNumFound(), 1);
+
+        for (SolrDocument doc : docList)
+        {
+            assertEquals((String) doc.getFieldValue("id"), docID);
+        }
+
+        SolrDocument oldDoc = response.getResults().get(0);
+
+        Collection<String> feldnamensliste = oldDoc.getFieldNames();
+        ArrayList<String> list = new ArrayList<String>();
+
+        for (String str:feldnamensliste)
+        {
+            list.add(str);
+        }
+
+        String feld = "Problemfall_Warm";
+
+        if(!list.contains(feld))
+        {
+            addField(docID, "Problemfall_Warm", true);
+        }
+
+        else
+        {
+
+        }
+    }
 
     /**
      * Der SolrUpdater fügt der Datenbank eine neues Feld hinzu und füllt dieses mit den eingegebenen Daten
@@ -263,6 +551,26 @@ public class SolrConnect {
     public void addRechtsexpertenfeldMieter2(String docID, Object istMieter)
     {
         addField(docID, "Rechtsexperten_istmieter2", istMieter);
+    }
+
+    public void addRechtsexpertenfeldGewerblich(String docID, boolean istGewerblich)
+    {
+        addField(docID, "Rechtsexperten_istgewerblich", istGewerblich);
+    }
+
+    public void addRechtsexpertenfeldWarm(String docID, boolean istWarm)
+    {
+        addField(docID, "Rechtsexperten_istwarm", istWarm);
+    }
+
+    public void addRechtsexpertenfeldGewerblich2(String docID, boolean istGewerblich)
+    {
+        addField(docID, "Rechtsexperten_istgewerblich2", istGewerblich);
+    }
+
+    public void addRechtsexpertenfeldWarm2(String docID, boolean istWarm)
+    {
+        addField(docID, "Rechtsexperten_istwarm2", istWarm);
     }
 
     /**
