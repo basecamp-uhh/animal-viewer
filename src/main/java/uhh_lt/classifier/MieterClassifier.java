@@ -35,7 +35,7 @@ public class MieterClassifier implements ClassifierInterface
      */
 
     private void DateiEinleser(String Filename, HashMap<String, Integer> Dictionary) {
-        System.out.println("loading: " +Filename);
+        //System.out.println("loading: " +Filename);
 
         InputStream input = getClass().getClassLoader().getResourceAsStream(Filename);
 
@@ -67,20 +67,12 @@ public class MieterClassifier implements ClassifierInterface
             } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("...done");
+        //System.out.println("...done");
     }
-
-    /**
-     * Gibt eine Zahl zurück, die die Wahrscheinlichkeit dafür, dass es sich um einen Mieter handelt
-     * ausgibt
-     *
-     * @param text Einen String
-     * @return float Die Mieterwahrscheinlichkeit
-     */
 
     public Double classify(String text)
     {
-        System.out.println(text);
+        //System.out.println(text);
 
         text = text.toLowerCase();
         vermieterScore = 0;

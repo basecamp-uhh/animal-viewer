@@ -26,11 +26,11 @@ public WatsonMieterClassifier() {
         neueFrage = neueFrage.substring(0, Math.min(neueFrage.length(), 1000));
 
     ClassifyOptions classifyOptions = new ClassifyOptions.Builder()
-            .classifierId("1e0b80x506-nlc-145")
+            .classifierId("1e5b70x507-nlc-653")
             .text(neueFrage)
             .build();
     classification = naturalLanguageClassifier.classify(classifyOptions).execute();
-System.out.println(classification);
+//System.out.println(classification);
         for (ClassifiedClass mClass : classification.getClasses()) {
             if (mClass.getClassName().compareTo("Mieter") == 0) {
                 return mClass.getConfidence();

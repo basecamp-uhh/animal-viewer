@@ -12,8 +12,8 @@ import org.json.simple.JSONObject;
 import uhh_lt.classifier.MieterClassifier;
 import uhh_lt.classifier.WatsonMieterClassifier;
 
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.text.DecimalFormat;
 import java.util.*;
 
 import static java.lang.Math.toIntExact;
@@ -22,9 +22,11 @@ import static junit.framework.Assert.assertEquals;
 public class SolrConnect {
 
     private static SolrClient client;
+    private JsonImport jsonImport;
 
     public SolrConnect() { // für ssh  : localhost , sonst ltdemos:8983/solr/fea-schema-less-2
          client = new HttpSolrClient.Builder("http://ltdemos:8983/solr/fea-schema-less-2").build();
+         jsonImport = new JsonImport();
     }
 
     public void store(JSONObject object) {
@@ -358,7 +360,6 @@ public class SolrConnect {
 
         SolrDocument oldDoc = response.getResults().get(0);
         SolrInputDocument inputDocument = new SolrInputDocument();
-
         Collection<String> feldnamensliste = oldDoc.getFieldNames();
         ArrayList<String> list = new ArrayList<String>();
 
@@ -372,13 +373,9 @@ public class SolrConnect {
             inputDocument.addField(list.get(i), oldDoc.getFieldValue(list.get(i)));
         }
 
-        HashMap<String, Object> map = new HashMap<String, Object>();
-
-        map.put("set", object);
-
-        //inputDocument.addField(fieldName, map);
+        //HashMap<String, Object> map = new HashMap<String, Object>();
+        //map.put("set", object);
         inputDocument.getField(fieldName).setValue(object, 1.0f);
-
 
         try {
             client.add(inputDocument);
@@ -395,8 +392,132 @@ public class SolrConnect {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
+
+    /**
+     * Die Methode liest die Textdatei "outputID.txt" ein und gibt eine Arrayliste zurück
+     */
+    public ArrayList IDEinleser()
+    {
+        ArrayList arrayList = new ArrayList();
+
+        InputStream input = getClass().getClassLoader().getResourceAsStream("outputID.txt");
+
+        BufferedReader TSVFile = null;
+        try {
+            TSVFile = new BufferedReader(
+                    new InputStreamReader(input));
+            String dataRow = null; // Read first line
+
+            try {
+                dataRow = TSVFile.readLine();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            while (dataRow != null)
+            {
+                String data = dataRow.trim();
+                if (!data.isEmpty())
+                {
+                    arrayList.add(data);
+                }
+                dataRow = TSVFile.readLine(); // Read next line of data.
+            }
+            TSVFile.close();
+        }catch (FileNotFoundException e) {
+            System.err.println("Die Datei konnte nicht geöffnet werden");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return arrayList;
+    }
+
+    /**
+     * Die Methode gibt die entsprechende Frage zu einer gegebenen ID zurück, um sie für Klassifikationen einlesen
+     * zu können
+     */
+    public Object FragenAusgeber(String docId)
+    {
+        SolrQuery query = new SolrQuery();
+        query.set("q", "id:"+docId);
+        QueryResponse response = null;
+        try {
+            response = client.query(query);
+        } catch (SolrServerException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        SolrDocumentList docList = response.getResults();
+        assertEquals(docList.getNumFound(), 1);
+
+        for (SolrDocument doc : docList)
+        {
+            assertEquals((String) doc.getFieldValue("id"), docId);
+        }
+
+        SolrDocument oldDoc = response.getResults().get(0);
+        Object question = oldDoc.getFieldValue("t_message");
+        return question;
+    }
+
+    /**
+     * Die Methode aktualisiert in Solr alle Felder "Expertensystem_istmieter" und "Expertensystem_wert", indem neue
+     * Klassifizierungen durchgeführt und die alten damit überschrieben werden
+     */
+    public void ChangeExpertensystemFields()
+    {
+        ArrayList arrayList = new ArrayList();
+        arrayList = IDEinleser();
+
+        for(int i = 0; i<arrayList.size(); i++)
+        {
+            Object question = FragenAusgeber(arrayList.get(i).toString());
+            MieterClassifier mieterClassifier = new MieterClassifier();
+            Object value = mieterClassifier.istMieter(question.toString());
+            Object value2 = mieterClassifier.classify(question.toString());
+
+            ChangeValueByField(arrayList.get(i).toString(), "Expertensystem_istmieter", value);
+            ChangeValueByField(arrayList.get(i).toString(), "Expertensystem_wert", value2);
+        }
+    }
+
+    /**
+     * Die Methode aktualisiert in Solr alle Felder "Watson_istmieter" und "Watson", indem neue Klassifizierungen durchgeführt
+     * und die alten damit überschrieben werden
+     */
+    public void ChangeWatsonFields()
+    {
+        ArrayList arrayList = new ArrayList();
+        arrayList = IDEinleser();
+
+        for(int i = 0; i<arrayList.size(); i++)
+        {
+            Object question = FragenAusgeber(arrayList.get(i).toString());
+            WatsonMieterClassifier watsonmieterClassifier = new WatsonMieterClassifier();
+            Object value = watsonmieterClassifier.classify(question.toString());
+            Object value2 = watsonmieterClassifier.istMieter(question.toString());
+
+            ChangeValueByField(arrayList.get(i).toString(), "Watson_istmieter", value2);
+            ChangeValueByField(arrayList.get(i).toString(), "Watson", value);
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /**
      * Anhand einer ID wird das JSON-Objekt aus Solr gelöscht
@@ -421,10 +542,10 @@ public class SolrConnect {
     }
 
     /**
-     * Es wird ein String erstellt, der aufsteigend nach Dauer sortiert eine Reihe von [Dauer, Preis] Substrings
-     * enthält.
+     * Die Methode nimmt einen Feldnamen entgegen und vergleicht ihn mit dem Feld "Preis"
+     * @param fieldName Nimmt einen Feldnamen entgegen, um den Wert des Feldes dem Feld "Preis" zu vergleichen
      */
-    public String DauerPreisComparer() {
+    public String Comparer(String fieldName) {
         StringBuilder sb = new StringBuilder();
         SolrQuery query = new SolrQuery();
         query.set("q", "*:*");
@@ -445,7 +566,7 @@ public class SolrConnect {
         ArrayList<Object> array1 = new ArrayList<Object>();
         ArrayList<Object> array2 = new ArrayList<Object>();
         for (SolrDocument document : results) {
-            doc = ((List)document.getFieldValue("t_time")).get(0);
+            doc = ((List)document.getFieldValue(fieldName)).get(0);
             array1.add(doc);
             doc1 = ((List)document.getFieldValue("price")).get(0);
             array2.add(doc1);
@@ -455,12 +576,27 @@ public class SolrConnect {
         for(int i=0;i<array1.size(); i++)
         {
             int key = Integer.valueOf((array1.get(i)).toString());
-
             hmap.put(key, array2.get(i).toString());
         }
 
-        Map<Integer, String> map = new TreeMap<Integer, String>(hmap);
+        Iterator<Integer> iterator = hmap.keySet().iterator();
+        for(int i= 0; i<=50;i++)
+        {
+            int value = 0;
+            int tmp;
+            while (iterator.hasNext())
+            {
+                tmp = iterator.next();
+                value = 0;
+                if (tmp > value)
+                {
+                    value = tmp;
+                }
+            }
+            hmap.remove(value);
+        }
 
+        Map<Integer, String> map = new TreeMap<Integer, String>(hmap);
         Set set2 = map.entrySet();
         Iterator iterator2 = set2.iterator();
         while(iterator2.hasNext()) {
@@ -468,8 +604,25 @@ public class SolrConnect {
 
             sb.append("[" + me2.getKey() + "," + me2.getValue()+ "],");
         }
-
         return sb.toString().substring(0,sb.length()-1);
+    }
+
+    /**
+     * Es wird ein String erstellt, der aufsteigend nach Dauer sortiert eine Reihe von [Dauer, Preis] Substrings
+     * enthält.
+     */
+    public String DauerPreisComparer()
+    {
+        return Comparer("t_time");
+    }
+
+    /**
+     * Es wird ein String erstellt, der aufsteigend nach Dauer sortiert eine Reihe von [Fragelänge, Preis] Substrings
+     * enthält.
+     */
+    public String FragelängePreisComparer()
+    {
+        return Comparer("t_length");
     }
 
     /**
@@ -492,6 +645,7 @@ public class SolrConnect {
         SolrDocumentList results = response.getResults();
         long key = results.getNumFound();
         int keyInt = toIntExact(key);
+        System.out.println(keyInt);
         return keyInt;
     }
 
@@ -551,7 +705,7 @@ public class SolrConnect {
      */
     public int getListe12()
     {
-        return getÜbereinstimmung("Expertensystem_istmieter",true, false);
+        return getÜbereinstimmung("Expertensystem_istmieter",true, false)-getAnzahlProblemfälle();
     }
 
     /**
@@ -560,7 +714,6 @@ public class SolrConnect {
      */
     public int getListe21()
     {
-        System.out.println(getÜbereinstimmung("Expertensystem_istmieter",false, true));
         return getÜbereinstimmung("Expertensystem_istmieter",false, true);
     }
 
@@ -588,22 +741,97 @@ public class SolrConnect {
     }
 
     /**
+     *
+     */
+    public boolean istProblemfall(String docId)
+    {
+        SolrConnect solrconnect = new SolrConnect();
+        SolrQuery query = new SolrQuery();
+        query.set("q", "id:"+docId);
+        query.setRows(10001);
+        QueryResponse response = null;
+        try {
+            response = client.query(query);
+        } catch (SolrServerException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        SolrDocumentList docList = response.getResults();
+        assertEquals(docList.getNumFound(), 1);
+
+        for (SolrDocument doc : docList)
+        {
+            assertEquals((String) doc.getFieldValue("id"), docId);
+        }
+
+        SolrDocument oldDoc = response.getResults().get(0);
+        String fieldValue = oldDoc.getFieldValue("Expertensystem_wert").toString();
+        if(fieldValue.compareTo("[0.5]") == 0)
+        {
+            System.out.println(true);
+            return true;
+        }
+        System.out.println(false);
+        return false;
+    }
+
+
+
+
+    /**
+     * Gibt die Anzahl an Problemfällen, bei denen im Expertensystem der Wert 0.5 beträgt, zurück
+     */
+    public int getAnzahlProblemfälle()
+    {
+        SolrConnect solrconnect = new SolrConnect();
+        SolrQuery query = new SolrQuery();
+        query.set("q", "Expertensystem_wert:"+0.5+" AND "+"Rechtsexperten_istmieter:"+true);
+        query.setRows(10001);
+        QueryResponse response = null;
+        try {
+            response = client.query(query);
+        } catch (SolrServerException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        SolrDocumentList results = response.getResults();
+        long key = results.getNumFound();
+        int keyInt = toIntExact(key);
+        System.out.println(keyInt);
+        return keyInt;
+    }
+
+    /**
      * Gibt die Genauigkeit der Listen aus
      */
-    public float getGenauigkeitListen()
+    public String getGenauigkeitListen()
     {
         int richtige = getListe11() + getListe22();
-        System.out.println(richtige);
-        System.out.println(richtige / getAnzahlRechtsexpertenfelder());
-        return (float) richtige / getAnzahlRechtsexpertenfelder();
+        DecimalFormat f = new DecimalFormat("0.00");
+        if(getAnzahlRechtsexpertenfelder()>0)
+        {
+            float genauigkeit = (float) richtige / (getAnzahlRechtsexpertenfelder()-getAnzahlProblemfälle());
+            System.out.println(f.format(genauigkeit*100));
+            return (f.format(genauigkeit*100));
+        }
+        return "-1";
     }
 
     /**
      * Gibt Genauigkeit von Watson aus
      */
-    public float getGenauigkeitWatson()
+    public String getGenauigkeitWatson()
     {
         int richtige = getWatson11() + getWatson22();
-        return (float) richtige / getAnzahlRechtsexpertenfelder();
+        DecimalFormat f = new DecimalFormat("0.00");
+        if(getAnzahlRechtsexpertenfelder()>0)
+        {
+            float genauigkeit = (float) richtige / getAnzahlRechtsexpertenfelder();
+            System.out.println(f.format(genauigkeit*100));
+            return (f.format(genauigkeit*100));
+        }
+        return "-1";
     }
 }

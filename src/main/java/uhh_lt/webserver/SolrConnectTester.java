@@ -7,7 +7,7 @@ public class SolrConnectTester {
     public static void main(String[] args)
     {
         SolrConnect connect = new SolrConnect();
-        connect.getWatson22();
+        connect.getWatson11();
 
         /**
         SolrConnect connect = new SolrConnect();

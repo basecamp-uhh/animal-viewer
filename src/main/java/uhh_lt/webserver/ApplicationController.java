@@ -224,8 +224,27 @@ public class ApplicationController  extends SpringBootServletInitializer {
         return sb.toString();
     }
 
-
     @RequestMapping("/stats")
+    public String staty(
+            @RequestParam(name = "name", required = false, defaultValue = "")
+                    String name, Model model) {
+        SolrConnect sc = new SolrConnect();
+        model.addAttribute("message", sc.DauerPreisComparer());
+        model.addAttribute("message1", sc.FragelängePreisComparer());
+        model.addAttribute("w11", sc.getWatson11());
+        model.addAttribute("w12", sc.getWatson12());
+        model.addAttribute("w21", sc.getWatson21());
+        model.addAttribute("w22", sc.getWatson22());
+        model.addAttribute("l11", sc.getListe11());
+        model.addAttribute("l12", sc.getListe12());
+        model.addAttribute("l21", sc.getListe21());
+        model.addAttribute("l22", sc.getListe22());
+
+        return "stats"; //view
+    }
+
+
+    @RequestMapping("/charts")
     public String mainWithParam(
             @RequestParam(name = "name", required = false, defaultValue = "")
                     String name, Model model) {
@@ -257,5 +276,4 @@ public class ApplicationController  extends SpringBootServletInitializer {
 
         return "welcome"; //view
     }
-
 }
