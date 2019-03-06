@@ -132,19 +132,14 @@ public class SolrConnect {
             response = client.query(query);
         } catch (SolrServerException e) {
             e.printStackTrace();
-        } catch (HttpSolrClient.RemoteSolrException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        if (response == null) {
+        if (response.getResults().size()>0) {
             return false;
         }
-        if (response.getResults().size()>0) {
-            return true;
-        }
-        return false;
+        return true;
     }
 
     public boolean isFullyAnnotatedWarm(String id){
