@@ -19,21 +19,21 @@ import java.util.*;
 import static java.lang.Math.toIntExact;
 import static junit.framework.Assert.assertEquals;
 
-public class SolrConnect {
-
+public class SolrConnect
+{
     private static SolrClient client;
     private JsonImport jsonImport;
 
-    public SolrConnect() { // für ssh  : localhost , sonst ltdemos:8983/solr/fea-schema-less-2
+    public SolrConnect()
+    { // für ssh  : localhost , sonst ltdemos:8983/solr/fea-schema-less-2
          client = new HttpSolrClient.Builder("http://ltdemos:8983/solr/fea-schema-less-2").build();
          jsonImport = new JsonImport();
     }
 
-    public void store(JSONObject object) {
+    public void store(JSONObject object)
+    {
        store(object, true);
-
     }
-
 
     public void store(JSONObject object, boolean commit) {
         MieterClassifier mc = new MieterClassifier();
@@ -60,12 +60,15 @@ public class SolrConnect {
             if (commit) {
                 client.commit();
             }
-        } catch (SolrServerException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        }
+        catch (SolrServerException e)
+        {
             e.printStackTrace();
         }
-
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     public void commit() {
@@ -81,13 +84,9 @@ public class SolrConnect {
     public String search(String searchTerm) {
 
         SolrQuery query = new SolrQuery();
-
         query.setQuery(searchTerm);
-        // query.addFilterQuery("cat:electronics","store:amazon.com");
         query.setFields("id");
         query.setStart(0);
-        // query.set("defType", "edismax");
-
         QueryResponse response = null;
         try {
             response = client.query(query);
@@ -142,7 +141,8 @@ public class SolrConnect {
         return true;
     }
 
-    public boolean isFullyAnnotatedWarm(String id){
+    public boolean isFullyAnnotatedWarm(String id)
+    {
         SolrQuery query = new SolrQuery();
         query.setQuery("id:" + id + "AND Rechtsexperten_istwarm2:*");
         QueryResponse response = null;
@@ -169,7 +169,6 @@ public class SolrConnect {
     public String getFrage(String id) {
     SolrQuery query = new SolrQuery();
     query.setQuery("id:" + id).setFields("t_message").setStart(0).setRows(10000);
-
     QueryResponse response = null;
 
         try {
@@ -202,14 +201,10 @@ public class SolrConnect {
         return String.valueOf(results.get(0).get("price"));
     }
 
-    public void IdSearch() throws IOException {
-
-        // query.addFilterQuery("cat:electronics","store:amazon.com");
-        // query.set("defType", "edismax");
+    public void IdSearch() throws IOException
+    {
         SolrQuery query = new SolrQuery();
-        // alle 1000 Daten werden berucksichtight
         query.setQuery("*:*").setFields("id").setStart(0).setRows(10000);
-
         QueryResponse response = null;
 
         try {
@@ -222,7 +217,6 @@ public class SolrConnect {
 
         SolrDocumentList results = response.getResults();
         FileWriter fw = new FileWriter("resources/outputID.txt");
-
         for (int i = 0; i < results.size(); ++i) {
             System.out.println(results.get(i));
             fw.write(String.valueOf(results.get(i).get("id")));
@@ -242,9 +236,12 @@ public class SolrConnect {
         SolrQuery query = new SolrQuery();
         query.set("q", "id:"+ docID);
         QueryResponse response = null;
-        try {
+        try
+        {
             response = client.query(query);
-        } catch (SolrServerException | IOException e) {
+        }
+        catch (SolrServerException | IOException e)
+        {
             e.printStackTrace();
         }
 
@@ -278,8 +275,7 @@ public class SolrConnect {
             {
                 addRechtsexpertenfeldMieter2(docID, istMieter);
             }
-}
-
+    }
 
     /**
      * Fügt in Solr das neue Feld "Problemfall" hinzu und setzt dieses auf den eingegebenen Wert
@@ -300,24 +296,20 @@ public class SolrConnect {
 
         SolrDocumentList docList = response.getResults();
         assertEquals(docList.getNumFound(), 1);
-
         for (SolrDocument doc : docList)
         {
             assertEquals((String) doc.getFieldValue("id"), docID);
         }
 
         SolrDocument oldDoc = response.getResults().get(0);
-
         Collection<String> feldnamensliste = oldDoc.getFieldNames();
         ArrayList<String> list = new ArrayList<String>();
-
         for (String str:feldnamensliste)
         {
             list.add(str);
         }
 
         String feld = "Problemfall";
-
         if(!list.contains(feld))
         {
             addField(docID, "Problemfall", true);
@@ -339,17 +331,14 @@ public class SolrConnect {
 
         SolrDocumentList docList = response.getResults();
         assertEquals(docList.getNumFound(), 1);
-
         for (SolrDocument doc : docList)
         {
             assertEquals((String) doc.getFieldValue("id"), docID);
         }
 
         SolrDocument oldDoc = response.getResults().get(0);
-
         Collection<String> feldnamensliste = oldDoc.getFieldNames();
         ArrayList<String> list = new ArrayList<String>();
-
         for (String str:feldnamensliste)
         {
             list.add(str);
@@ -357,7 +346,6 @@ public class SolrConnect {
 
         String feld = "Rechtsexperten_istgewerblich";
         String feld2 = "Rechtsexperten_istgewerblich2";
-
         if(!list.contains(feld))
         {
             addRechtsexpertenfeldGewerblich(docID, istGewerblich);
@@ -367,11 +355,6 @@ public class SolrConnect {
         {
 
                 addRechtsexpertenfeldGewerblich2(docID, istGewerblich);
-        }
-
-        else if(list.contains(feld2))
-        {
-
         }
     }
 
@@ -390,24 +373,20 @@ public class SolrConnect {
 
         SolrDocumentList docList = response.getResults();
         assertEquals(docList.getNumFound(), 1);
-
         for (SolrDocument doc : docList)
         {
             assertEquals((String) doc.getFieldValue("id"), docID);
         }
 
         SolrDocument oldDoc = response.getResults().get(0);
-
         Collection<String> feldnamensliste = oldDoc.getFieldNames();
         ArrayList<String> list = new ArrayList<String>();
-
         for (String str:feldnamensliste)
         {
             list.add(str);
         }
 
         String feld = "Problemfall_Gewerblich";
-
         if(!list.contains(feld))
         {
             addField(docID, "Problemfall_Gewerblich", true);
@@ -429,17 +408,14 @@ public class SolrConnect {
 
         SolrDocumentList docList = response.getResults();
         assertEquals(docList.getNumFound(), 1);
-
         for (SolrDocument doc : docList)
         {
             assertEquals((String) doc.getFieldValue("id"), docID);
         }
 
         SolrDocument oldDoc = response.getResults().get(0);
-
         Collection<String> feldnamensliste = oldDoc.getFieldNames();
         ArrayList<String> list = new ArrayList<String>();
-
         for (String str:feldnamensliste)
         {
             list.add(str);
@@ -447,7 +423,6 @@ public class SolrConnect {
 
         String feld = "Rechtsexperten_istwarm";
         String feld2 = "Rechtsexperten_istwarm2";
-
         if(!list.contains(feld))
         {
             addRechtsexpertenfeldWarm(docID, istWarm);
@@ -474,24 +449,20 @@ public class SolrConnect {
 
         SolrDocumentList docList = response.getResults();
         assertEquals(docList.getNumFound(), 1);
-
         for (SolrDocument doc : docList)
         {
             assertEquals((String) doc.getFieldValue("id"), docID);
         }
 
         SolrDocument oldDoc = response.getResults().get(0);
-
         Collection<String> feldnamensliste = oldDoc.getFieldNames();
         ArrayList<String> list = new ArrayList<String>();
-
         for (String str:feldnamensliste)
         {
             list.add(str);
         }
 
         String feld = "Problemfall_Warm";
-
         if(!list.contains(feld))
         {
             addField(docID, "Problemfall_Warm", true);
@@ -559,7 +530,6 @@ public class SolrConnect {
 
         SolrDocumentList docList = response.getResults();
         assertEquals(docList.getNumFound(), 1);
-
         for (SolrDocument doc : docList)
         {
             assertEquals((String) doc.getFieldValue("id"), docID);
@@ -567,10 +537,8 @@ public class SolrConnect {
 
         SolrDocument oldDoc = response.getResults().get(0);
         SolrInputDocument inputDocument = new SolrInputDocument();
-
         Collection<String> feldnamensliste = oldDoc.getFieldNames();
         ArrayList<String> list = new ArrayList<String>();
-
         for (String str:feldnamensliste)
         {
             list.add(str);
@@ -582,7 +550,6 @@ public class SolrConnect {
         }
 
         inputDocument.addField(fieldName, object);
-
         try {
             client.add(inputDocument);
         } catch (SolrServerException e) {
@@ -599,7 +566,6 @@ public class SolrConnect {
             e.printStackTrace();
         }
     }
-
 
     /**
      * Es können gezielt Felder per ID in der Datenbank aufgerufen und verändert werden
@@ -623,7 +589,6 @@ public class SolrConnect {
 
         SolrDocumentList docList = response.getResults();
         assertEquals(docList.getNumFound(), 1);
-
         for (SolrDocument doc : docList)
         {
             assertEquals((String) doc.getFieldValue("id"), docID);
@@ -633,7 +598,6 @@ public class SolrConnect {
         SolrInputDocument inputDocument = new SolrInputDocument();
         Collection<String> feldnamensliste = oldDoc.getFieldNames();
         ArrayList<String> list = new ArrayList<String>();
-
         for (String str:feldnamensliste)
         {
             list.add(str);
@@ -645,7 +609,6 @@ public class SolrConnect {
         }
 
         inputDocument.getField(fieldName).setValue(object, 1.0f);
-
         try {
             client.add(inputDocument);
         } catch (SolrServerException e) {
@@ -720,7 +683,6 @@ public class SolrConnect {
 
         SolrDocumentList docList = response.getResults();
         assertEquals(docList.getNumFound(), 1);
-
         for (SolrDocument doc : docList)
         {
             assertEquals((String) doc.getFieldValue("id"), docId);
@@ -746,7 +708,6 @@ public class SolrConnect {
             MieterClassifier mieterClassifier = new MieterClassifier();
             Object value = mieterClassifier.istHauptklasse(question.toString());
             Object value2 = mieterClassifier.classify(question.toString());
-
             ChangeValueByField(arrayList.get(i).toString(), "Expertensystem_istmieter", value);
             ChangeValueByField(arrayList.get(i).toString(), "Expertensystem_wert", value2);
         }
@@ -767,7 +728,6 @@ public class SolrConnect {
             WatsonMieterClassifier watsonmieterClassifier = new WatsonMieterClassifier();
             Object value = watsonmieterClassifier.classify(question.toString());
             Object value2 = watsonmieterClassifier.istHauptklasse(question.toString());
-
             ChangeValueByField(arrayList.get(i).toString(), "Watson_istmieter", value2);
             ChangeValueByField(arrayList.get(i).toString(), "Watson", value);
         }
@@ -814,7 +774,6 @@ public class SolrConnect {
         }
 
         SolrDocumentList results = response.getResults();
-
         Object doc = "";
         Object doc1 = "";
         ArrayList<Object> array1 = new ArrayList<Object>();
@@ -855,7 +814,6 @@ public class SolrConnect {
         Iterator iterator2 = set2.iterator();
         while(iterator2.hasNext()) {
             Map.Entry me2 = (Map.Entry)iterator2.next();
-
             sb.append("[" + me2.getKey() + "," + me2.getValue()+ "],");
         }
         return sb.toString().substring(0,sb.length()-1);
@@ -884,7 +842,6 @@ public class SolrConnect {
      */
     public int getÜbereinstimmung(String fieldname1, Object param1, Object param2)
     {
-        SolrConnect solrconnect = new SolrConnect();
         SolrQuery query = new SolrQuery();
         query.set("q", ""+fieldname1+":"+param1+" AND "+"Rechtsexperten_istmieter"+":"+param2);
         query.setRows(10001);
@@ -899,7 +856,6 @@ public class SolrConnect {
         SolrDocumentList results = response.getResults();
         long key = results.getNumFound();
         int keyInt = toIntExact(key);
-        System.out.println(keyInt);
         return keyInt;
     }
 
@@ -959,7 +915,7 @@ public class SolrConnect {
      */
     public int getListe12()
     {
-        return getÜbereinstimmung("Expertensystem_istmieter",true, false)-getAnzahlProblemfälle();
+        return getÜbereinstimmung("Expertensystem_istmieter",true, false);
     }
 
     /**
@@ -968,7 +924,7 @@ public class SolrConnect {
      */
     public int getListe21()
     {
-        return getÜbereinstimmung("Expertensystem_istmieter",false, true);
+        return getÜbereinstimmung("Expertensystem_istmieter",false, true)-getAnzahlProblemfälle();
     }
 
     /**
@@ -999,7 +955,6 @@ public class SolrConnect {
      */
     public boolean istProblemfall(String docId)
     {
-        SolrConnect solrconnect = new SolrConnect();
         SolrQuery query = new SolrQuery();
         query.set("q", "id:"+docId);
         query.setRows(10001);
@@ -1023,15 +978,10 @@ public class SolrConnect {
         String fieldValue = oldDoc.getFieldValue("Expertensystem_wert").toString();
         if(fieldValue.compareTo("[0.5]") == 0)
         {
-            //System.out.println(true);
             return true;
         }
-        //System.out.println(false);
         return false;
     }
-
-
-
 
     /**
      * Gibt die Anzahl an Problemfällen, bei denen im Expertensystem der Wert 0.5 beträgt, zurück
@@ -1053,37 +1003,68 @@ public class SolrConnect {
         SolrDocumentList results = response.getResults();
         long key = results.getNumFound();
         int keyInt = toIntExact(key);
-        //System.out.println(keyInt);
         return keyInt;
     }
 
     /**
-     * Gibt die Genauigkeit der Listen aus
+     * Gibt die Trefferquote (richtig positiv geteilt durch richtig positiv plus falsch negativ) der Listen aus
      */
-    public String getGenauigkeitListen()
+    public String getTrefferquoteListen()
     {
-        int richtige = getListe11() + getListe22();
+        int richtige = getListe11();
+        int falneg = getListe21();
         DecimalFormat f = new DecimalFormat("0.00");
         if(getAnzahlRechtsexpertenfelder()>0)
         {
-            float genauigkeit = (float) richtige / (getAnzahlRechtsexpertenfelder()-getAnzahlProblemfälle());
-            //System.out.println(f.format(genauigkeit*100));
+            float genauigkeit = (float) richtige / (richtige + falneg);
             return (f.format(genauigkeit*100));
         }
         return "-1";
     }
 
     /**
-     * Gibt Genauigkeit von Watson aus
+     * Gibt die Trefferquote (richtig positiv geteilt durch richtig positiv plus falsch negativ) von Watson aus
      */
-    public String getGenauigkeitWatson()
+    public String getTrefferquoteWatson()
     {
-        int richtige = getWatson11() + getWatson22();
+        int richtige = getWatson11();
+        int falneg = getWatson21();
         DecimalFormat f = new DecimalFormat("0.00");
         if(getAnzahlRechtsexpertenfelder()>0)
         {
-            float genauigkeit = (float) richtige / getAnzahlRechtsexpertenfelder();
-            //System.out.println(f.format(genauigkeit*100));
+            float genauigkeit = (float) richtige / (richtige + falneg);
+            return (f.format(genauigkeit*100));
+        }
+        return "-1";
+    }
+
+    /**
+     * Die Methode gibt die Genauigkeit (richtig positiv geteilt durch richtig positiv plus falsch positiv) der Listen zurück
+     */
+    public String getGenauigkeitListen()
+    {
+        int richtige = getListe11();
+        int falpo = getListe12();
+        DecimalFormat f = new DecimalFormat("0.00");
+        if(getAnzahlRechtsexpertenfelder()>0)
+        {
+            float genauigkeit = (float) richtige / (richtige + falpo);
+            return (f.format(genauigkeit*100));
+        }
+        return "-1";
+    }
+
+    /**
+     * Die Methode gibt die Genauigkeit (richtig positiv geteilt durch richtig positiv plus falsch positiv) von Watson zurück
+     */
+    public String getGenauigkeitWatson()
+    {
+        int richtige = getWatson11();
+        int falpo = getWatson12();
+        DecimalFormat f = new DecimalFormat("0.00");
+        if(getAnzahlRechtsexpertenfelder()>0)
+        {
+            float genauigkeit = (float) richtige / (richtige + falpo);
             return (f.format(genauigkeit*100));
         }
         return "-1";
