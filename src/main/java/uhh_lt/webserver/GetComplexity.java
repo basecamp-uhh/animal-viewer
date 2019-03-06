@@ -2,23 +2,32 @@ package uhh_lt.webserver;
 
 public class GetComplexity {
     public static void main(String[] args) {
-        System.out.println(countWord("    Ich liebe es efdc ewfsdc wdw"));
+        System.out.println(countWord("Das hier ist ein Beispielsatz mit unterschiedlichen Wörtern, unter anderem lange Nomen wie zum Beispiel Ordnungswidrigkeit"));
     }
 
     public static int  countWord(String message) {
 
-        int count = 0;
+        int wordCount = 0;
         char ch[] = new char[message.length()];
         for (int i = 0; i < message.length(); i++) {
             ch[i] = message.charAt(i);
             if (((i > 0) && (ch[i] != ' ') && (ch[i - 1] == ' ')) || ((ch[0] != ' ') && (i == 0)))
-                count++;
+                wordCount++;
         }
-        return count;
+        return wordCount;
     }
 
-    public double getComplexity() {
+    public static int complexNounCount(String message) {
+        int nounCount = 0;
+        String [] words = message.split(" ");
+        for (String word:words)
+        {
+            if (!word.isEmpty() && Character.isUpperCase(word.charAt(0)) && word.length() > 15)
+            {
+                nounCount++;
+            }
+        }
 
-        return 0;
+        return nounCount;
     }
 }

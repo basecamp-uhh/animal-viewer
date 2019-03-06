@@ -27,11 +27,11 @@ public class GetRecommendedPrice {
             e.printStackTrace();
         }
         writer.write("Anzahl der Wörter, komplexe Nomen, Preis");
-        writer.write(" ");
+        writer.write("/n");
         for (String id:ids) {
             String frage = connect.getFrage(id);
             int wortAnzahl = GetComplexity.countWord(frage);
-/**
+
             int nounCount = GetComplexity.complexNounCount(frage);
             String price = connect.getPreis(id);
 
@@ -42,7 +42,7 @@ public class GetRecommendedPrice {
 
             writer.write(sb.toString());
             writer.write("\n");
- **/
+
         }
         writer.close();
     }

@@ -189,9 +189,9 @@ public class SolrConnect {
         return String.valueOf(results.get(0).get("t_message"));
     }
 
-    public Double getPreis(String id) {
+    public String getPreis(String id) {
         SolrQuery query = new SolrQuery();
-        query.setQuery("id:" + id).setFields("t_price").setStart(0).setRows(10000);
+        query.setQuery("id:" + id).setFields("price").setStart(0).setRows(10000);
 
         QueryResponse response = null;
 
@@ -204,7 +204,7 @@ public class SolrConnect {
         }
 
         SolrDocumentList results = response.getResults();
-        return Double.valueOf((Double) results.get(0).get("t_price"));
+        return String.valueOf(results.get(0).get("price"));
     }
 
     public void IdSearch() throws IOException {
