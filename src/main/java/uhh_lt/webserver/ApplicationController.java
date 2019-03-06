@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import uhh_lt.classifier.MieterClassifier;
 
 import javax.servlet.http.HttpServletResponse;
@@ -19,8 +20,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
-//@RestController
-@Controller
+@RestController
+// @Controller
 @EnableAutoConfiguration
 @SpringBootApplication
 public class ApplicationController  extends SpringBootServletInitializer {
@@ -152,42 +153,6 @@ public class ApplicationController  extends SpringBootServletInitializer {
         }
     }
 
-    @RequestMapping("/setWarm")
-    public void setWarm(@RequestParam(value = "id", defaultValue = "") String id,  HttpServletResponse httpResponse) {
-        System.out.println(id);
-        SolrConnect sc = new SolrConnect();
-        sc.WarmButtonsPushed(id, true);
-        try {
-            httpResponse.sendRedirect("./warm");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @RequestMapping("/setKalt")
-    public void setKalt(@RequestParam(value = "id", defaultValue = "") String id,  HttpServletResponse httpResponse) {
-        System.out.println(id);
-        SolrConnect sc = new SolrConnect();
-        sc.WarmButtonsPushed(id, false);
-        try {
-            httpResponse.sendRedirect("./warm");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @RequestMapping("/setProblemfallWarm")
-    public void setProblemfallWarm(@RequestParam(value = "id", defaultValue = "") String id,  HttpServletResponse httpResponse) {
-        System.out.println(id);
-        SolrConnect sc = new SolrConnect();
-        sc.WarmProblemfallButtonPushed(id);
-        try {
-            httpResponse.sendRedirect("./warm");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     @RequestMapping("/")
     String home()
     {
@@ -227,14 +192,12 @@ public class ApplicationController  extends SpringBootServletInitializer {
     @RequestMapping("/gewerblich")
     String home2()
     {
-        List<String> ids = readIdFile("outputID.txt");
+        List<String> ids = readIdFile("resources/outputID.txt");
         StringBuilder sb = new StringBuilder();
+
 
         SolrConnect sc = new SolrConnect();
         String id = givenList_shouldReturnARandomElement(ids);
-        while (sc.isFullyAnnotatedGewerblich(id)) {
-            id = givenList_shouldReturnARandomElement(ids);
-        }
         String frage = sc.getFrage(id);
 
         sb.append("<html><body>");
@@ -261,42 +224,6 @@ public class ApplicationController  extends SpringBootServletInitializer {
         return sb.toString();
     }
 
-    @RequestMapping("/warm")
-    String home3()
-    {
-        List<String> ids = readIdFile("outputID.txt");
-        StringBuilder sb = new StringBuilder();
-
-        SolrConnect sc = new SolrConnect();
-        String id = givenList_shouldReturnARandomElement(ids);
-        while (sc.isFullyAnnotatedWarm(id)) {
-            id = givenList_shouldReturnARandomElement(ids);
-        }
-        String frage = sc.getFrage(id);
-
-        sb.append("<html><body>");
-
-        sb.append("<form action=\"./setWarm\" method=\"get\">\n")
-                .append("<textarea name=\"id\" >")
-                .append(id).append("</textarea><input type=\"submit\" value=\"Warm\">\n" +
-                "</form>");
-
-        sb.append("<form action=\"./setKalt\" method=\"get\">\n")
-                .append("<textarea name=\"id\" >")
-                .append(id).append("</textarea><input type=\"submit\" value=\"Kalt\">\n" +
-                "</form>");
-
-        sb.append("<form action=\"./setProblemfallWarm\" method=\"get\">\n")
-                .append("<textarea name=\"id\" >")
-                .append(id).append("</textarea><input type=\"submit\" value=\"Problemfall\">\n" +
-                "</form>");
-
-
-        sb.append("<p<ID: ").append(id).append("</p><p>Frage:</p><pre>");
-        sb.append(frage);
-        sb.append("</pre></body></html>");
-        return sb.toString();
-    }
 
     @RequestMapping("/hello")
     String stats()
