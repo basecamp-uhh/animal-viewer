@@ -903,7 +903,6 @@ public class SolrConnect {
         SolrDocumentList results = response.getResults();
         long key = results.getNumFound();
         int keyInt = toIntExact(key);
-        //System.out.println(keyInt);
         return keyInt;
     }
 
@@ -1003,7 +1002,6 @@ public class SolrConnect {
      */
     public boolean istProblemfall(String docId)
     {
-        SolrConnect solrconnect = new SolrConnect();
         SolrQuery query = new SolrQuery();
         query.set("q", "id:"+docId);
         query.setRows(10001);
@@ -1027,10 +1025,8 @@ public class SolrConnect {
         String fieldValue = oldDoc.getFieldValue("Expertensystem_wert").toString();
         if(fieldValue.compareTo("[0.5]") == 0)
         {
-            //System.out.println(true);
             return true;
         }
-        //System.out.println(false);
         return false;
     }
 
@@ -1057,7 +1053,6 @@ public class SolrConnect {
         SolrDocumentList results = response.getResults();
         long key = results.getNumFound();
         int keyInt = toIntExact(key);
-        //System.out.println(keyInt);
         return keyInt;
     }
 
@@ -1067,12 +1062,11 @@ public class SolrConnect {
     public String getTrefferquoteListen()
     {
         int richtige = getListe11();
-        int falpos = getListe21();
+        int falneg = getListe21();
         DecimalFormat f = new DecimalFormat("0.00");
         if(getAnzahlRechtsexpertenfelder()>0)
         {
-            float genauigkeit = (float) richtige / (richtige + falpos);
-            //System.out.println(f.format(genauigkeit*100));
+            float genauigkeit = (float) richtige / (richtige + falneg);
             return (f.format(genauigkeit*100));
         }
         return "-1";
@@ -1084,12 +1078,43 @@ public class SolrConnect {
     public String getTrefferquoteWatson()
     {
         int richtige = getWatson11();
-        int falpo = getWatson21();
+        int falneg = getWatson21();
+        DecimalFormat f = new DecimalFormat("0.00");
+        if(getAnzahlRechtsexpertenfelder()>0)
+        {
+            float genauigkeit = (float) richtige / (richtige + falneg);
+            return (f.format(genauigkeit*100));
+        }
+        return "-1";
+    }
+
+    /**
+     * Die Methode gibt die Genauigkeit (richtig positiv geteilt durch richtig positiv plus falsch positiv) der Listen zurück
+     */
+    public String getGenauigkeitListen()
+    {
+        int richtige = getListe11();
+        int falpo = getListe12();
         DecimalFormat f = new DecimalFormat("0.00");
         if(getAnzahlRechtsexpertenfelder()>0)
         {
             float genauigkeit = (float) richtige / (richtige + falpo);
-            //System.out.println(f.format(genauigkeit*100));
+            return (f.format(genauigkeit*100));
+        }
+        return "-1";
+    }
+
+    /**
+     * Die Methode gibt die Genauigkeit (richtig positiv geteilt durch richtig positiv plus falsch positiv) von Watson zurück
+     */
+    public String getGenauigkeitWatson()
+    {
+        int richtige = getWatson11();
+        int falpo = getWatson12();
+        DecimalFormat f = new DecimalFormat("0.00");
+        if(getAnzahlRechtsexpertenfelder()>0)
+        {
+            float genauigkeit = (float) richtige / (richtige + falpo);
             return (f.format(genauigkeit*100));
         }
         return "-1";
