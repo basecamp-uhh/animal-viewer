@@ -798,14 +798,14 @@ public class SolrConnect
         }
 
         Iterator<Integer> iterator = hmap.keySet().iterator();
-        for(int i= 0; i<=50;i++)
+
+        for(int i= 0; i<=700;i++)
         {
             int value = 0;
             int tmp;
             while (iterator.hasNext())
             {
                 tmp = iterator.next();
-                value = 0;
                 if (tmp > value)
                 {
                     value = tmp;
@@ -813,6 +813,7 @@ public class SolrConnect
             }
             hmap.remove(value);
         }
+
 
         Map<Integer, String> map = new TreeMap<Integer, String>(hmap);
         Set set2 = map.entrySet();
@@ -933,6 +934,15 @@ public class SolrConnect
     }
 
     /**
+     * Ermittelt, wie häufig die Listen ohne Bereinigung der Problemfälle mit den Rechtsexperten nicht übereinstimmt,
+     * da die Listen false und die Rechtsexperten true sagen
+     */
+    public int getListe21Alle()
+    {
+        return getÜbereinstimmung("Expertensystem_istmieter", false, true);
+    }
+
+    /**
      * Gibt die Gesamtzahl der Felder "Rechtsexperten_istmieter" zurück.
      */
     public int getAnzahlRechtsexpertenfelder()
@@ -1013,6 +1023,7 @@ public class SolrConnect
 
     /**
      * Gibt die Trefferquote (richtig positiv geteilt durch richtig positiv plus falsch negativ) der Listen aus
+     * @return die Trefferquote oder -1 im Fehlerfall
      */
     public String getTrefferquoteListen()
     {
@@ -1045,6 +1056,7 @@ public class SolrConnect
 
     /**
      * Die Methode gibt die Genauigkeit (richtig positiv geteilt durch richtig positiv plus falsch positiv) der Listen zurück
+     * @return die Genauigkeit oder -1 im Fehlerfall
      */
     public String getGenauigkeitListen()
     {
@@ -1070,6 +1082,140 @@ public class SolrConnect
         if(getAnzahlRechtsexpertenfelder()>0)
         {
             float genauigkeit = (float) richtige / (richtige + falpo);
+            return (f.format(genauigkeit*100));
+        }
+        return "-1";
+    }
+
+    /**
+     *
+     * @return
+     */
+    public String getKorrektklassifikationsrateListen()
+    {
+        int richtige = getListe11()+getListe22();
+        int alle = getAnzahlRechtsexpertenfelder()-getAnzahlProblemfälle();
+        DecimalFormat f = new DecimalFormat("0.00");
+        if(getAnzahlRechtsexpertenfelder()>0)
+        {
+            float genauigkeit = (float) richtige / alle;
+            return (f.format(genauigkeit*100));
+        }
+        return "-1";
+    }
+
+    /**
+     *
+     */
+    public String getKorrektklassifikationsrateWatson() {
+        int richtige = getWatson11()+getWatson22();
+        int alle = getAnzahlRechtsexpertenfelder();
+        DecimalFormat f = new DecimalFormat("0.00");
+        if (getAnzahlRechtsexpertenfelder() > 0) {
+            float genauigkeit = (float) richtige / alle;
+            return (f.format(genauigkeit * 100));
+        }
+        return "-1";
+    }
+
+    /**
+     *
+     * @return
+     */
+    public String getFalschklassifikationsrateListen()
+    {
+        int richtige = getListe12()+getListe21();
+        int alle = getAnzahlRechtsexpertenfelder()-getAnzahlProblemfälle();
+        DecimalFormat f = new DecimalFormat("0.00");
+        if(getAnzahlRechtsexpertenfelder()>0)
+        {
+            float genauigkeit = (float) richtige / alle;
+            return (f.format(genauigkeit*100));
+        }
+        return "-1";
+    }
+
+    /**
+     *
+     * @return
+     */
+    public String getFalschklassifikationsrateWatson()
+    {
+        int richtige = getWatson12()+getWatson21();
+        int alle = getAnzahlRechtsexpertenfelder();
+        DecimalFormat f = new DecimalFormat("0.00");
+        if(getAnzahlRechtsexpertenfelder()>0)
+        {
+            float genauigkeit = (float) richtige / alle;
+            return (f.format(genauigkeit*100));
+        }
+        return "-1";
+    }
+
+    /**
+     *
+     * @return
+     */
+    public String getAlleFalschklassifikationsrateListen()
+    {
+        int richtige = getListe12()+getListe21Alle();
+        int alle = getAnzahlRechtsexpertenfelder();
+        DecimalFormat f = new DecimalFormat("0.00");
+        if(getAnzahlRechtsexpertenfelder()>0)
+        {
+            float genauigkeit = (float) richtige / alle;
+            return (f.format(genauigkeit*100));
+        }
+        return "-1";
+    }
+
+    /**
+     *
+     * @return
+     */
+    public String getAlleKorrektklassifikationsrateListen()
+    {
+        int richtige = getListe11()+getListe22();
+        int alle = getAnzahlRechtsexpertenfelder();
+        DecimalFormat f = new DecimalFormat("0.00");
+        if(getAnzahlRechtsexpertenfelder()>0)
+        {
+            float genauigkeit = (float) richtige / alle;
+            return (f.format(genauigkeit*100));
+        }
+        return "-1";
+    }
+
+    /**
+     * Die Methode gibt die Genauigkeit (richtig positiv geteilt durch richtig positiv plus falsch positiv) der Listen
+     * ohne Aussortieren der Problemfälle zurück
+     * @return die Genauigkeit oder -1 im Fehlerfall
+     */
+    public String getAlleGenauigkeitListen()
+    {
+        int richtige = getListe11();
+        int falpo = getListe12();
+        DecimalFormat f = new DecimalFormat("0.00");
+        if(getAnzahlRechtsexpertenfelder()>0)
+        {
+            float genauigkeit = (float) richtige / (richtige + falpo);
+            return (f.format(genauigkeit*100));
+        }
+        return "-1";
+    }
+
+    /**
+     * Gibt die Trefferquote (richtig positiv geteilt durch richtig positiv plus falsch negativ) der Listen aus
+     * @return die Trefferquote oder -1 im Fehlerfall
+     */
+    public String getAlleTrefferquoteListen()
+    {
+        int richtige = getListe11();
+        int falneg = getListe21Alle();
+        DecimalFormat f = new DecimalFormat("0.00");
+        if(getAnzahlRechtsexpertenfelder()>0)
+        {
+            float genauigkeit = (float) richtige / (richtige + falneg);
             return (f.format(genauigkeit*100));
         }
         return "-1";
