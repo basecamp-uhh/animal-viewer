@@ -368,17 +368,10 @@ public class SolrConnect {
             addRechtsexpertenfeldGewerblich(docID, istGewerblich);
         }
 
-        else if(list.contains(feld))
+        else if(list.contains(feld) && !list.contains(feld2))
         {
-            if(!list.contains(feld2))
-            {
+
                 addRechtsexpertenfeldGewerblich2(docID, istGewerblich);
-            }
-
-            else
-            {
-
-            }
         }
 
         else if(list.contains(feld2))
@@ -424,11 +417,6 @@ public class SolrConnect {
         {
             addField(docID, "Problemfall_Gewerblich", true);
         }
-
-        else
-        {
-
-        }
     }
 
     public void WarmButtonsPushed(String docID, boolean istWarm)
@@ -470,22 +458,9 @@ public class SolrConnect {
             addRechtsexpertenfeldWarm(docID, istWarm);
         }
 
-        else if(list.contains(feld))
+        else if(list.contains(feld) && !list.contains(feld2))
         {
-            if(!list.contains(feld2))
-            {
-                addRechtsexpertenfeldWarm2(docID, istWarm);
-            }
-
-            else
-            {
-
-            }
-        }
-
-        else if(list.contains(feld2))
-        {
-
+            addRechtsexpertenfeldWarm2(docID, istWarm);
         }
     }
 
@@ -525,11 +500,6 @@ public class SolrConnect {
         if(!list.contains(feld))
         {
             addField(docID, "Problemfall_Warm", true);
-        }
-
-        else
-        {
-
         }
     }
 
@@ -616,8 +586,6 @@ public class SolrConnect {
             inputDocument.addField(list.get(i), oldDoc.getFieldValue(list.get(i)));
         }
 
-        //HashMap<String, Object> map = new HashMap<String, Object>();
-        //map.put("set", object);
         inputDocument.addField(fieldName, object);
 
         try {
@@ -681,8 +649,6 @@ public class SolrConnect {
             inputDocument.addField(list.get(i), oldDoc.getFieldValue(list.get(i)));
         }
 
-        //HashMap<String, Object> map = new HashMap<String, Object>();
-        //map.put("set", object);
         inputDocument.getField(fieldName).setValue(object, 1.0f);
 
         try {
@@ -811,21 +777,6 @@ public class SolrConnect {
             ChangeValueByField(arrayList.get(i).toString(), "Watson", value);
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     /**
      * Anhand einer ID wird das JSON-Objekt aus Solr gelöscht
@@ -1049,7 +1000,7 @@ public class SolrConnect {
     }
 
     /**
-     *
+     * Mithilfe der Methode lässt sich prüfen, ob es sich bei der gegebenen ID um einen Problemfall handelt
      */
     public boolean istProblemfall(String docId)
     {
@@ -1077,10 +1028,10 @@ public class SolrConnect {
         String fieldValue = oldDoc.getFieldValue("Expertensystem_wert").toString();
         if(fieldValue.compareTo("[0.5]") == 0)
         {
-            System.out.println(true);
+            //System.out.println(true);
             return true;
         }
-        System.out.println(false);
+        //System.out.println(false);
         return false;
     }
 
@@ -1107,7 +1058,7 @@ public class SolrConnect {
         SolrDocumentList results = response.getResults();
         long key = results.getNumFound();
         int keyInt = toIntExact(key);
-        System.out.println(keyInt);
+        //System.out.println(keyInt);
         return keyInt;
     }
 
@@ -1121,7 +1072,7 @@ public class SolrConnect {
         if(getAnzahlRechtsexpertenfelder()>0)
         {
             float genauigkeit = (float) richtige / (getAnzahlRechtsexpertenfelder()-getAnzahlProblemfälle());
-            System.out.println(f.format(genauigkeit*100));
+            //System.out.println(f.format(genauigkeit*100));
             return (f.format(genauigkeit*100));
         }
         return "-1";
@@ -1137,7 +1088,7 @@ public class SolrConnect {
         if(getAnzahlRechtsexpertenfelder()>0)
         {
             float genauigkeit = (float) richtige / getAnzahlRechtsexpertenfelder();
-            System.out.println(f.format(genauigkeit*100));
+            //System.out.println(f.format(genauigkeit*100));
             return (f.format(genauigkeit*100));
         }
         return "-1";
