@@ -375,10 +375,15 @@ public class ApplicationController  extends SpringBootServletInitializer {
         model.addAttribute("l12", sc.getListe12());
         model.addAttribute("l21", sc.getListe21());
         model.addAttribute("l22", sc.getListe22());
-
+        model.addAttribute("esr", sc.getListe11()+sc.getListe22());
+        model.addAttribute("esf", sc.getListe12()+sc.getListe21());
+        model.addAttribute("ep", sc.getAnzahlProblemfälle());
+        model.addAttribute("egen", sc.getGenauigkeitListen());
+        model.addAttribute("wsr", sc.getWatson11()+sc.getWatson22());
+        model.addAttribute("wsf", sc.getWatson12()+sc.getWatson21());
+        model.addAttribute("wgen", sc.getGenauigkeitWatson());
         return "stats"; //view
     }
-
 
     @RequestMapping("/charts")
     public String charty( Model model) {
@@ -395,17 +400,13 @@ public class ApplicationController  extends SpringBootServletInitializer {
         model.addAttribute("w12", sc.getWatson12());
         model.addAttribute("w21", sc.getWatson21());
         model.addAttribute("w22", sc.getWatson22());
-
-
         return "table"; //view
     }
-
 
     @RequestMapping("/test")
     public String main(Model model) {
         model.addAttribute("message", "asdf");
         model.addAttribute("tasks", "quert");
-
         return "welcome"; //view
     }
 }
