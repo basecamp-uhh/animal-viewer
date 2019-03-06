@@ -15,7 +15,7 @@ function drawChart() {
           title: 'Length of Time vs. Price Comparison',
           hAxis: {title: 'Length of Time', minValue: 0, maxValue: 50},
           vAxis: {title: 'Price', minValue: 0, maxValue: 180},
-          legend: 'none'
+          trendlines: { 0: {} }
         };
 
         var chart = new google.visualization.ScatterChart(document.getElementById('chart_div'));
@@ -30,7 +30,8 @@ function drawChart() {
           title: 'Text Length vs. Price Comparison',
           hAxis: {title: 'Text Length', minValue: 0, maxValue: 30},
           vAxis: {title: 'Price', minValue: 0, maxValue: 200},
-          legend: 'none'
+          trendlines: { 0: {} }
+
         };
 
         var chart2 = new google.visualization.ScatterChart(document.getElementById('chart2_div'));
@@ -84,10 +85,17 @@ function drawChart() {
         table2.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
       }
 </script>
+    <script th:text="'var ep=' + ${ep}+ ';'"></script>
+    <script th:text="'var egen=' + ${egen}+ ';'"></script>
+    <script th:text="'var esr=' + ${esr}+ ';'"></script>
+    <script th:text="'var esf=' + ${esf}+ ';'"></script>
+    <script th:text="'var wgen=' + ${wgen}+ ';'"></script>
+    <script th:text="'var wsr=' + ${wsr}+ ';'"></script>
+    <script th:text="'var wsf=' + ${wsf}+ ';'"></script>
 
 </head>
 <body>
-<h1> Dauer-Preis-Vergleich <span th:text="'Der wert ust ' + ${l11}"></span> </h1>
+<h1> Dauer-Preis-Vergleich </h1>
 
 <div id='chart_div'></div>
 <h1> Fragelänge-Preis-Vergleich </h1>
@@ -97,17 +105,17 @@ function drawChart() {
 <p> Der Wert 1 in der Tabelle repräsentiert true, der Wert 2 false. Aus der Tabelle lässt sich also ablesen,
 wie oft das Watsonsystem mit den Rechtsexperten bezüglich true übereinstimmt - an der Stelle 1-1 - und abweicht - bei
 1-2. Gleiches gilt für die Übereinstimmung bezüglich false - 2-2 - und die Abweichung bezüglich false - 2-1.</p>
-<p> <center>Richtig: BlaBlaBla</center></p>
-<p> <center>Falsch: BlaBlaBla</center></p>
-<p> <center><b>Genauigkeit: BlaBlaBla</b></center></p>
+<p> <center><span th:text="'Richtig: ' + ${wsr}"></span></center></p>
+<p> <center><span th:text="'Falsch: ' + ${wsf}"></span></center></p>
+<p> <center><b><span th:text="'Genauigkeit: ' + ${wgen}"></span></b></center></p>
 <h1> Konfusionsmatrix für das Expertensystem im Vergleich zu den Rechtsexperten</h1>
 <div id='table2_div'></div>
 <p> Der Wert 1 in der Tabelle repräsentiert true, der Wert 2 false. Aus der Tabelle lässt sich also ablesen,
     wie oben ablesen wie oft hier das Expertensystem mit den Rechtsexperten bezüglich true übereinstimmt - an der Stelle 1-1 - und abweicht - bei
     1-2. Gleiches gilt für die Übereinstimmung bezüglich false - 2-2 - und die Abweichung bezüglich false - 2-1.</p>
-<p> <center>Richtig: BlaBlaBla</center></p>
-<p> <center>Falsch: BlaBlaBla</center></p>
-<p> <center><b>Genauigkeit: BlaBlaBla</b></center></p>
-<p> <center>Problemfälle, die nicht klassifiziert werden konnten: BlaBlaBla </center></p>
+<p> <center><span th:text="'Richtig: ' + ${esr}"></span></center></p>
+<p> <center><span th:text="'Falsch: ' + ${esf}"></span></center></p>
+<p> <center><b><span th:text="'Genauigkeit: ' + ${egen}"></span></b></center></p>
+<p> <center><span th:text="'Problemfälle, die nicht klassifiziert werden konnten: ' + ${ep}"></span> </center></p>
 </body>
 </html>
