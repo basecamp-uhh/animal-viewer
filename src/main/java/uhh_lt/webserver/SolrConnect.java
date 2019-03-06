@@ -141,31 +141,6 @@ public class SolrConnect
         return true;
     }
 
-    public boolean isFullyAnnotatedWarm(String id)
-    {
-        SolrQuery query = new SolrQuery();
-        query.setQuery("id:" + id + "AND Rechtsexperten_istwarm2:*");
-        QueryResponse response = null;
-
-        try {
-            response = client.query(query);
-        } catch (SolrServerException e) {
-            e.printStackTrace();
-        } catch (HttpSolrClient.RemoteSolrException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        if (response == null) {
-            return false;
-        }
-        if (response.getResults().size()>0) {
-            return true;
-        }
-        return false;
-    }
-
     public String getFrage(String id) {
     SolrQuery query = new SolrQuery();
     query.setQuery("id:" + id).setFields("t_message").setStart(0).setRows(10000);
@@ -393,82 +368,6 @@ public class SolrConnect
         }
     }
 
-    public void WarmButtonsPushed(String docID, boolean istWarm)
-    {
-        SolrQuery query = new SolrQuery();
-        query.set("q", "id:"+ docID);
-        QueryResponse response = null;
-        try {
-            response = client.query(query);
-        } catch (SolrServerException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        SolrDocumentList docList = response.getResults();
-        assertEquals(docList.getNumFound(), 1);
-        for (SolrDocument doc : docList)
-        {
-            assertEquals((String) doc.getFieldValue("id"), docID);
-        }
-
-        SolrDocument oldDoc = response.getResults().get(0);
-        Collection<String> feldnamensliste = oldDoc.getFieldNames();
-        ArrayList<String> list = new ArrayList<String>();
-        for (String str:feldnamensliste)
-        {
-            list.add(str);
-        }
-
-        String feld = "Rechtsexperten_istwarm";
-        String feld2 = "Rechtsexperten_istwarm2";
-        if(!list.contains(feld))
-        {
-            addRechtsexpertenfeldWarm(docID, istWarm);
-        }
-
-        else if(list.contains(feld) && !list.contains(feld2))
-        {
-            addRechtsexpertenfeldWarm2(docID, istWarm);
-        }
-    }
-
-    public void WarmProblemfallButtonPushed(String docID)
-    {
-        SolrQuery query = new SolrQuery();
-        query.set("q", "id:"+ docID);
-        QueryResponse response = null;
-        try {
-            response = client.query(query);
-        } catch (SolrServerException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        SolrDocumentList docList = response.getResults();
-        assertEquals(docList.getNumFound(), 1);
-        for (SolrDocument doc : docList)
-        {
-            assertEquals((String) doc.getFieldValue("id"), docID);
-        }
-
-        SolrDocument oldDoc = response.getResults().get(0);
-        Collection<String> feldnamensliste = oldDoc.getFieldNames();
-        ArrayList<String> list = new ArrayList<String>();
-        for (String str:feldnamensliste)
-        {
-            list.add(str);
-        }
-
-        String feld = "Problemfall_Warm";
-        if(!list.contains(feld))
-        {
-            addField(docID, "Problemfall_Warm", true);
-        }
-    }
-
     /**
      * Der SolrUpdater fügt der Datenbank eine neues Feld hinzu und füllt dieses mit den eingegebenen Daten
      * @param  docID Die ID, den Primärschlüssel, als String
@@ -494,19 +393,9 @@ public class SolrConnect
         addField(docID, "Rechtsexperten_istgewerblich", istGewerblich);
     }
 
-    public void addRechtsexpertenfeldWarm(String docID, boolean istWarm)
-    {
-        addField(docID, "Rechtsexperten_istwarm", istWarm);
-    }
-
     public void addRechtsexpertenfeldGewerblich2(String docID, boolean istGewerblich)
     {
         addField(docID, "Rechtsexperten_istgewerblich2", istGewerblich);
-    }
-
-    public void addRechtsexpertenfeldWarm2(String docID, boolean istWarm)
-    {
-        addField(docID, "Rechtsexperten_istwarm2", istWarm);
     }
 
     /**
