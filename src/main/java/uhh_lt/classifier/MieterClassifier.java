@@ -21,8 +21,8 @@ public class MieterClassifier implements ClassifierInterface
 
     public MieterClassifier()
     {
-        DateiEinleser("Mieter", mieterTerms);
-        DateiEinleser("Vermieter", vermieterTerms);
+        dateiEinleser("Mieter", mieterTerms);
+        dateiEinleser("Vermieter", vermieterTerms);
         vermieterScore = 0;
         mieterScore = 0;
     }
@@ -34,7 +34,7 @@ public class MieterClassifier implements ClassifierInterface
      * @param Dictionary Eine HashMap
      */
 
-    private void DateiEinleser(String Filename, HashMap<String, Integer> Dictionary) {
+    private void dateiEinleser(String Filename, HashMap<String, Integer> Dictionary) {
         //System.out.println("loading: " +Filename);
 
         InputStream input = getClass().getClassLoader().getResourceAsStream(Filename);

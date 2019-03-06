@@ -381,7 +381,7 @@ public class ApplicationController  extends SpringBootServletInitializer {
 
 
     @RequestMapping("/charts")
-    public String mainWithParam( Model model) {
+    public String charty( Model model) {
         SolrConnect sc = new SolrConnect();
         model.addAttribute("message", sc.DauerPreisComparer());
 

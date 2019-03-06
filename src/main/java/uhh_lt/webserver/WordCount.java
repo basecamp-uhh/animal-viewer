@@ -1,11 +1,11 @@
 package uhh_lt.webserver;
-public class wordCount {
+public class WordCount {
 
     public static void main(String[] args) {
-        System.out.println(wordCount.countWord("    Ich liebe es efdc ewfsdc wdw"));
+        System.out.println(WordCount.countWord("    Ich liebe es efdc ewfsdc wdw"));
     }
 
-    public static int  countWord(String message) {
+    public static int countWord(String message) {
 
         int count = 0;
         char ch[] = new char[message.length()];
