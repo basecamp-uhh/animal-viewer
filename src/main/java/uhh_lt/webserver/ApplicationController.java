@@ -8,7 +8,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import uhh_lt.classifier.MieterClassifier;
 
 import javax.servlet.http.HttpServletResponse;
@@ -20,8 +19,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
-@RestController
-// @Controller
+//@RestController
+@Controller
 @EnableAutoConfiguration
 @SpringBootApplication
 public class ApplicationController  extends SpringBootServletInitializer {

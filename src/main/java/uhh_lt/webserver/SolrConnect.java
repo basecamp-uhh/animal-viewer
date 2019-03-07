@@ -517,6 +517,7 @@ public class SolrConnect
 
     /**
      * Die Methode liest die Textdatei "outputID.txt" ein und gibt eine Arrayliste zurück
+     * @return
      */
     public ArrayList IDEinleser()
     {
@@ -556,6 +557,8 @@ public class SolrConnect
     /**
      * Die Methode gibt die entsprechende Frage zu einer gegebenen ID zurück, um sie für Klassifikationen einlesen
      * zu können
+     * @param docId
+     * @return
      */
     public Object FragenAusgeber(String docId)
     {
@@ -647,6 +650,7 @@ public class SolrConnect
     /**
      * Die Methode nimmt einen Feldnamen entgegen und vergleicht ihn mit dem Feld "Preis"
      * @param fieldName Nimmt einen Feldnamen entgegen, um den Wert des Feldes dem Feld "Preis" zu vergleichen
+     * @return
      */
     public String Comparer(String fieldName) {
         StringBuilder sb = new StringBuilder();
@@ -711,7 +715,8 @@ public class SolrConnect
 
     /**
      * Es wird ein String erstellt, der aufsteigend nach Dauer sortiert eine Reihe von [Dauer, Preis] Substrings
-     * enthält.
+     * enthält
+     * @return
      */
     public String DauerPreisComparer()
     {
@@ -720,7 +725,8 @@ public class SolrConnect
 
     /**
      * Es wird ein String erstellt, der aufsteigend nach Dauer sortiert eine Reihe von [Fragelänge, Preis] Substrings
-     * enthält.
+     * enthält
+     * @return
      */
     public String FragelängePreisComparer()
     {
@@ -729,6 +735,10 @@ public class SolrConnect
 
     /**
      * Eine allgemeine Methode um Übereinstimmungen zwischen den Listen oder  Watson mit den Rechtsexperten übereinstimmt
+     * @param fieldname1
+     * @param param1
+     * @param param2
+     * @return
      */
     public int getÜbereinstimmung(String fieldname1, Object param1, Object param2)
     {
@@ -751,6 +761,7 @@ public class SolrConnect
 
     /**
      * Ermittelt, wie häufig Watson mit den Rechtsexperten mit jeweils true übereinstimmt
+     * @return
      */
     public int getWatson11()
     {
@@ -759,6 +770,7 @@ public class SolrConnect
 
     /**
      * Ermittelt, wie häufig Watson mit den Rechtsexperten mit jeweils false übereinstimmt
+     * @return
      */
     public int getWatson22()
     {
@@ -768,6 +780,7 @@ public class SolrConnect
     /**
      * Ermittelt, wie häufig Watson mit den Rechtsexperten nicht übereinstimmt, da Watson true sagt und die Rechtsexperten
      * sagen false
+     * @return
      */
     public int getWatson12()
     {
@@ -777,6 +790,7 @@ public class SolrConnect
     /**
      * Ermittelt, wie häufig Watson mit den Rechtsexperten nicht übereinstimmt, da Watson false sagt und die Rechtsexperten
      * sagen true
+     * @return
      */
     public int getWatson21()
     {
@@ -785,6 +799,7 @@ public class SolrConnect
 
     /**
      * Ermittelt, wie häufig die Listen mit den Rechtsexperten übereinstimmen mit jeweils true
+     * @return
      */
     public int getListe11()
     {
@@ -793,6 +808,7 @@ public class SolrConnect
 
     /**
      * Ermittelt, wie häufig die Listen mit den Rechtsexperten übereinstimmen mit jeweils false
+     * @return
      */
     public int getListe22()
     {
@@ -802,6 +818,7 @@ public class SolrConnect
     /**
      * Ermittelt, wie häufig die Listen mit den Rechtsexperten nicht übereinstimmt, da die Listen true und die
      * Rechtsexperten false sagen
+     * @return
      */
     public int getListe12()
     {
@@ -811,6 +828,7 @@ public class SolrConnect
     /**
      * Ermittelt, wie häufig die Listen mit den Rechtsexperten nicht übereinstimmt, da die Listen false und die
      * Rechtsexperten true sagen
+     * @return
      */
     public int getListe21()
     {
@@ -820,6 +838,7 @@ public class SolrConnect
     /**
      * Ermittelt, wie häufig die Listen ohne Bereinigung der Problemfälle mit den Rechtsexperten nicht übereinstimmt,
      * da die Listen false und die Rechtsexperten true sagen
+     * @return
      */
     public int getListe21Alle()
     {
@@ -827,7 +846,8 @@ public class SolrConnect
     }
 
     /**
-     * Gibt die Gesamtzahl der Felder "Rechtsexperten_istmieter" zurück.
+     * Gibt die Gesamtzahl der Felder "Rechtsexperten_istmieter" zurück
+     * @return
      */
     public int getAnzahlRechtsexpertenfelder()
     {
@@ -851,6 +871,8 @@ public class SolrConnect
 
     /**
      * Mithilfe der Methode lässt sich prüfen, ob es sich bei der gegebenen ID um einen Problemfall handelt
+     * @param
+     * @return
      */
     public boolean istProblemfall(String docId)
     {
@@ -884,6 +906,7 @@ public class SolrConnect
 
     /**
      * Gibt die Anzahl an Problemfällen, bei denen im Expertensystem der Wert 0.5 beträgt, zurück
+     * @return
      */
     public int getAnzahlProblemfälle()
     {
@@ -924,6 +947,7 @@ public class SolrConnect
 
     /**
      * Gibt die Trefferquote (richtig positiv geteilt durch richtig positiv plus falsch negativ) von Watson aus
+     * @return
      */
     public String getTrefferquoteWatson()
     {
@@ -957,6 +981,7 @@ public class SolrConnect
 
     /**
      * Die Methode gibt die Genauigkeit (richtig positiv geteilt durch richtig positiv plus falsch positiv) von Watson zurück
+     * @return
      */
     public String getGenauigkeitWatson()
     {
@@ -990,6 +1015,7 @@ public class SolrConnect
 
     /**
      *
+     * @return
      */
     public String getKorrektklassifikationsrateWatson() {
         int richtige = getWatson11()+getWatson22();
