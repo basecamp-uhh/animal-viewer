@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title th:text="${title}"></title>
+</head>
+<body>
+<h1>Animal Viewer</h1>
+<img th:src="@{'/images/'+${image}}" width="60%"/>
+<p th:text="${tier}"></p>
+</body>
+</html>
