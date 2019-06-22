@@ -7,7 +7,7 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="base.camp Animal Viewer"/>
     <meta name="author" content="base.camp"/>
-    <title th:text="'base.camp Animal Viewer:' + ${title}"></title>
+    <title>base.camp Animal Viewer: Tier nicht gefunden</title>
 
     <!-- Bootstrap core CSS -->
     <link href="./css/bootstrap.min.css" rel="stylesheet"/>
@@ -38,11 +38,11 @@
 <div class="container">
 
     <div class="starter-template">
-        <h2 th:text="${tier}"></h2>
-        <img th:src="@{'/images/'+${image}}" style="max-height:800px;max-width:70%"/>
-        <p th:text="${description}"></p>
+        <h2>Tier nicht gefunden</h2>
+        <img th:src="@{/images/error.jpg}" style="max-height:800px;max-width:70%"/>
+        <p>Dieses Tier hat und leider noch keine Fotos von sich gegeben. Schau später nochmal nach oder <a href="mailto:basecamp@informatik.uni-hamburg.de">sag uns, welches Tier Du vermisst!</a></p>
 
-        <p>Neues zufälliges Bild von <q th:text="${tier}"></q> aufrufen: <a href="javascript:history.go(0)">Neues Bild</a> </p>
+        <p>In der Zwischenzeit kannst Du <a href="./random">weitere Bilder von den Tieren anschauen</a>.</p>
     </div>
 
 
