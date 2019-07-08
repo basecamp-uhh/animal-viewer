@@ -4,8 +4,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>uhh_basecamp</groupId>
-    <artifactId>animal</artifactId>
-    <version>viewer</version>
+    <artifactId>animal-viewer</artifactId>
+    <version>1.0</version>
 
     <name>Animal Viewer</name>
     <description>Animal Viewer for QR codes.</description>
