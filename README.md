@@ -1,12 +1,26 @@
-# ba-service-backend
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/cdd08acab3044766b0d89200af331169)](https://www.codacy.com/app/6hauptvo/ba-service-backend?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=6hauptvo/ba-service-backend&amp;utm_campaign=Badge_Grade)
+# base.camp Animal Viewer
+
+
+## Description
+
+### German
+Projekt: Automatische Tiererkennung auf Bauernhöfen zur Erhöhung der Kundentransparenz
+
+In dem Projekt soll mit Hilfe von Bildverarbeitung und Texterkennung ermöglicht werden, dass die Ohr­marken von Kühen automatisch in Bildern erkannt werden. Dabei sollen dann einer Kuh alle Bilder, auf denen diese Kuh mit entsprechender Ohrmarke er­kannt wurde, zugeordnet werden. Schließlich wäre es dann möglich anhand eines Codes, alle Bilder zu ei­ner Kuh zu sehen. Zudem soll dann noch im nächsten Schritt eine App gestaltet werden. Diese App soll zum Beispiel im Supermarkt zum Einsatz kommen, um ei­nen QR-Code auf einem Produkt zu scannen. Über den QR-Code sind dann Bilder von den Haltungsbedingun­gen der Kuh einsehbar, von der das Fleisch stammt.
+
+### English
+
+This project displays images of animals, which can be accessed using scannable QR-codes.
+
+## Live Demo
+A live demo is available on our web server: [animal-viewer](http://basecamp-demos.informatik.uni-hamburg.de/animal-viewer/)
+
+## Running instructions
 
 This project contains a web service based on the Spring Boot framework.
-It features a RESTful endpoint that can retrieve word expansions.
 
 - Check out and run the ApplicationController
-- default port is 8080
-- for deployment, port can be edited in /resources/application.properties
-- check with "curl localhost:8080/expansions?word=IBM&format=json"
-- for textual output: "curl localhost:8080/expansions?word=IBM&format=text"
+- use the maven command **spring-boot:run**
+- server is started at port **8080**
+- for deployment, port can be edited in /src/main/resources/application.properties
 

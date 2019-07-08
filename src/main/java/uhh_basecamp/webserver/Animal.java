@@ -1,6 +1,5 @@
-package uhh_lt.webserver;
+package uhh_basecamp.webserver;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;

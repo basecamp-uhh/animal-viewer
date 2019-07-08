@@ -1,4 +1,4 @@
-package uhh_lt.webserver;
+package uhh_basecamp.webserver;
 
 public class Image {
 

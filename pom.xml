@@ -3,12 +3,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>uhh_lt</groupId>
+    <groupId>uhh_basecamp</groupId>
     <artifactId>animal</artifactId>
     <version>viewer</version>
 
-    <name>Basic Webserver</name>
-    <description>Basic bootstrap webserver with REST support</description>
+    <name>Animal Viewer</name>
+    <description>Animal Viewer for QR codes.</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -20,13 +20,10 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
-        <dkpro.core.version>1.6.2</dkpro.core.version>
     </properties>
 
 
     <dependencies>
-
-
              
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -86,20 +83,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>uhh_lt.webserver.ApplicationController</mainClass>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <addClasspath>true</addClasspath>
-                            <mainClass>uhh_lt.webserver.ApplicationController</mainClass>
-                        </manifest>
-                    </archive>
+                    <mainClass>ApplicationController</mainClass>
                 </configuration>
             </plugin>
         </plugins>

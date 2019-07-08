@@ -1,4 +1,4 @@
-package uhh_lt.webserver;
+package uhh_basecamp.webserver;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Random;
