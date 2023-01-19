@@ -1,4 +1,6 @@
 # base.camp Animal Viewer
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fbasecamp-uhh%2Fanimal-viewer.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fbasecamp-uhh%2Fanimal-viewer?ref=badge_shield)
+
 
 
 ## Description
@@ -24,3 +26,7 @@ This project contains a web service based on the Spring Boot framework.
 - server is started at port **8080**
 - for deployment, port can be edited in /src/main/resources/application.properties
 
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fbasecamp-uhh%2Fanimal-viewer.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fbasecamp-uhh%2Fanimal-viewer?ref=badge_large)
